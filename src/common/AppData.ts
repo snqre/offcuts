@@ -1,25 +1,29 @@
-import { AppDataSchema } from "src/common/_";
-import { UserData } from "src/common/_";
-import { ProductData } from "src/common/_";
-import { Ok } from "reliq";
-import { Err } from "reliq";
-import { Result } from "reliq";
+import { z as ZodValidator } from "zod";
+import { UserDataSchema } from "@common";
+import { UserData } from "@common";
+import { ProductDataSchema } from "@common";
+import { ProductData } from "@common";
+import { require } from "reliq";
 
-export type AppDataR = Result<AppDataT, AppDataE>;
-export type AppDataT = AppData;
-export type AppDataE = "APP_DATA.ERR_SCHEMA_VALIDATION_FAILED";
+export const AppDataSchema = ZodValidator.object({
+    users: ZodValidator.array(UserDataSchema),
+    products: ZodValidator.array(ProductDataSchema)
+});
+
+export type AppDataError = "APP_DATA.ERR_SCHEMA_VALIDATION_FAILED";
+
 export type AppData = {
     users: Array<UserData>;
     products: Array<ProductData>;
 };
-export function AppData({ users, products }: AppData): AppDataR {
+
+export function AppData(_instance: AppData): AppData {
     /** @constructor */ {
-        let instance = {
-            users,
-            products
-        };
-        let match = AppDataSchema.safeParse(instance).success;
-        if (match === false) return Err("APP_DATA.ERR_SCHEMA_VALIDATION_FAILED");
-        return Ok(instance);
+        require<AppDataError>(isAppData(_instance), "APP_DATA.ERR_SCHEMA_VALIDATION_FAILED");
+        return _instance;
     }
+}
+
+export function isAppData(unknown: unknown): unknown is AppData {
+    return AppDataSchema.safeParse(unknown).success;
 }

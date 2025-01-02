@@ -18,10 +18,8 @@
 		"noPropertyAccessFromIndexSignature": false,
 		"baseUrl": ".",
 		"paths": {
-			"@common": ["src/common/_"],
-			"@server-class": ["src/server-class/_"],
-			"@server-router": ["src/server-router/_"],
-			"@web-util": ["src/web-util/_"]
+			"@common": ["src/common/Module"],
+			"@server": ["src/server/Module"]
 		}
 	}
 }
