@@ -16,11 +16,7 @@ export type ProductDataError =
     | "PRODUCT_DATA.ERR_STOCK_NOT_AN_INTEGER"
     | "PRODUCT_DATA.ERR_SCHEMA_VALIDATION_FAILED";
 
-export type ProductData = {
-    name: string;
-    price: number;
-    stock: number;
-};
+export type ProductData = typeof ProductDataSchema._type;
 
 export function ProductData(_instance: ProductData): ProductData {
     /** @constructor */ {

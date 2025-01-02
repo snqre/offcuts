@@ -1,6 +1,5 @@
 import { z as ZodValidator } from "zod";
 import { ProductDataSchema } from "@common";
-import { ProductData } from "@common";
 import { require } from "reliq";
 
 export const OrderDataSchema = ZodValidator.object({
@@ -14,10 +13,7 @@ export type OrderDataError =
     | "ORDER_DATA.ERR_AMOUNT_NOT_AN_INTEGER"
     | "ORDER_DATA.ERR_SCHEMA_VALIDATION_FAILED";
 
-export type OrderData = {
-    product: ProductData;
-    amount: number;
-};
+export type OrderData = typeof OrderDataSchema._type;
 
 export function OrderData(_instance: OrderData): OrderData {
     /** @constructor */ {

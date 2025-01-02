@@ -1,7 +1,6 @@
 import { default as Validator } from "validator";
 import { z as ZodValidator } from "zod";
 import { OrderDataSchema } from "@common";
-import { OrderData } from "@common";
 import { require } from "reliq";
 
 export const UserDataSchema = ZodValidator.object({
@@ -21,14 +20,7 @@ export type UserDataError =
     | "USER_DATA.ERR_INVALID_ADDRESS"
     | "USER_DATA.ERR_SCHEMA_VALIDATION_FAILED";
 
-export type UserData = {
-    username: string;
-    hash: string;
-    orders: Array<OrderData>;
-    email?: string;
-    phoneNumber?: string;
-    address?: string;
-}
+export type UserData = typeof UserDataSchema._type;
 
 export function UserData(_instance: UserData): UserData {
     /** @constructor */ {

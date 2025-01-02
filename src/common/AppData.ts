@@ -1,8 +1,6 @@
 import { z as ZodValidator } from "zod";
 import { UserDataSchema } from "@common";
-import { UserData } from "@common";
 import { ProductDataSchema } from "@common";
-import { ProductData } from "@common";
 import { require } from "reliq";
 
 export const AppDataSchema = ZodValidator.object({
@@ -12,10 +10,7 @@ export const AppDataSchema = ZodValidator.object({
 
 export type AppDataError = "APP_DATA.ERR_SCHEMA_VALIDATION_FAILED";
 
-export type AppData = {
-    users: Array<UserData>;
-    products: Array<ProductData>;
-};
+export type AppData = typeof AppDataSchema._type;
 
 export function AppData(_instance: AppData): AppData {
     /** @constructor */ {
