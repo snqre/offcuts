@@ -18,8 +18,13 @@
 		"noPropertyAccessFromIndexSignature": false,
 		"baseUrl": ".",
 		"paths": {
-			"@common": ["src/common/Module"],
-			"@server": ["src/server/Module"]
+			"@common": ["src/common/mod"],
+			"@server": ["src/server/mod"],
+			"@web-component": ["src/web-component/mod"],
+			"@web-constant": ["src/web-constant/mod"],
+			"@web-hook": ["src/web-hook/mod"],
+			"@web-page": ["src/web-page/mod"],
+			"@web-util": ["src/web-util/mod"]
 		}
 	}
 }
