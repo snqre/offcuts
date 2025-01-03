@@ -25,7 +25,9 @@ export function Store(_db: Database): Store {
             setStock, 
             increaseStock,
             decreaseStock,
-            setPrice
+            setPrice,
+            increasePrice,
+            decreasePrice
         };
     }
 
@@ -114,6 +116,24 @@ export function Store(_db: Database): Store {
         while (i < app.products.length) {
             let product: ProductData = app.products[Number(i)];
             if (product.name === name) product.price += amount;
+            i++;
+        }
+        await _db.set(app);
+        return;
+    }
+
+    async function decreasePrice(... [name, amount]: Parameters<Store["decreasePrice"]>): ReturnType<Store["decreasePrice"]> {
+        require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+        require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+        require(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+        let app: AppData = await _db.get();
+        let i: bigint = 0n;
+        while (i < app.products.length) {
+            let product: ProductData = app.products[Number(i)];
+            if (product.name === name) {
+                require(product.price - amount >= 0, "STORE.ERR_PRICE_BELOW_ZERO");
+                product.price -= amount;
+            }
             i++;
         }
         await _db.set(app);
