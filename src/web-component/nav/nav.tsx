@@ -1,8 +1,13 @@
 // @ts-ignore
 import { default as logo } from "./public/img/Logo.png";
 
+import { ProductDataSchema } from "@common";
+import { ProductData } from "@common";
+import { z as ZodValidator } from "zod";
 import { NavButton } from "@web-component";
 import { NavCallToActionButton } from "@web-component";
+import { require } from "reliq";
+import { useTags } from "@web-hook";
 import * as React from "react";
 
 export type NavProps = {
@@ -10,7 +15,7 @@ export type NavProps = {
 };
 
 export function Nav(props: NavProps): React.ReactNode {
-    let { categories } = props;
+    let tags: Array<string> = useTags();
     let container$: React.ComponentPropsWithRef<"div"> = {
         style: {
             display: "flex",

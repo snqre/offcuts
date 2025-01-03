@@ -16,9 +16,11 @@
 	"dependencies": {
 		"@types/bcrypt": "5.0.2",
 		"@types/express": "5.0.0",
+		"@types/fast-levenshtein": "^0.0.4",
 		"@types/validator": "13.12.2",
 		"bcrypt": "5.1.1",
 		"express": "4.21.2",
+		"fast-levenshtein": "^3.0.0",
 		"redis": "4.7.0",
 		"reliq": "1.2.2",
 		"stripe": "17.5.0",

@@ -166,7 +166,16 @@ async function Redis(_socket, _key) {
 var import_reliq10 = require("reliq");
 function Store(_db) {
   {
-    return { products, productsByName };
+    return {
+      products,
+      productsByName,
+      setStock,
+      increaseStock,
+      decreaseStock,
+      setPrice,
+      increasePrice,
+      decreasePrice
+    };
   }
   async function products(...[]) {
     return (await _db.get()).products;
@@ -192,6 +201,81 @@ function Store(_db) {
       if (product.name === name) product.stock = Number(amount);
       i++;
     }
+    await _db.set(app);
+    return;
+  }
+  async function increaseStock(...[name, amount]) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) product.stock += Number(amount);
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function decreaseStock(...[name, amount]) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) {
+        (0, import_reliq10.require)(product.stock - Number(amount) > 0, "STORE.ERR_INSUFFICIENT_STOCK");
+        product.stock -= Number(amount);
+      }
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function setPrice(...[name, price]) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(price >= 0, "STORE.ERR_PRICE_BELOW_ZERO");
+    (0, import_reliq10.require)(price <= Number.MAX_SAFE_INTEGER, "STORE.ERR_PRICE_ABOVE_MAX_SAFE_INTEGER");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) product.stock = price;
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function increasePrice(...[name, amount]) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    (0, import_reliq10.require)(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) product.price += amount;
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function decreasePrice(...[name, amount]) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    (0, import_reliq10.require)(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) {
+        (0, import_reliq10.require)(product.price - amount >= 0, "STORE.ERR_PRICE_BELOW_ZERO");
+        product.price -= amount;
+      }
+      i++;
+    }
+    await _db.set(app);
     return;
   }
 }
@@ -209,52 +293,126 @@ var import_reliq11 = require("reliq");
 // src/server/router/admin_router.ts
 var import_express = require("express");
 var import_reliq12 = require("reliq");
-function AdminRouter(store) {
-  return (0, import_express.Router)().post("/product/stock/set", async (rq, rs) => {
-    try {
-      let { password, name, amount } = rq.body;
-      let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
-      (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
-      await store.setStock(name, amount);
-      rs.send("ADMIN_ROUTER.OK");
-    } catch (e) {
-      rs.send(e);
-    }
+function AdminRouter(_store) {
+  {
+    return (0, import_express.Router)().post("/store/set-stock", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
+        await _store.setStock(name, amount);
+        rs.send("ADMIN_ROUTER.OK");
+      } catch (e) {
+        rs.send(e);
+      }
+      return;
+    }).post("/store/increase-stock", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
+        await _store.increaseStock(name, amount);
+        rs.send("ADMIN_ROUTER.OK");
+      } catch (e) {
+        rs.send(e);
+      }
+      return;
+    }).post("/store/decrease-stock", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
+        await _store.decreaseStock(name, amount);
+        rs.send("ADMIN_ROUTER.OK");
+      } catch (e) {
+        rs.send(e);
+      }
+      return;
+    }).post("/store/set-price", async (rq, rs) => {
+      try {
+        let { password, name, price } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && price !== null && price !== void 0 && typeof price === "number" && price >= 0 && price <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(price);
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
+        await _store.setPrice(name, price);
+        rs.send("ADMIN_ROUTER.OK");
+      } catch (e) {
+        rs.send(e);
+      }
+      return;
+    }).post("/store/increase-price", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
+        _checkPassword(password);
+        await _store.increasePrice(name, amount);
+        rs.send("OK");
+        return;
+      } catch (e) {
+        rs.send(e);
+        return;
+      }
+    }).post("/store/decrease-price", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
+        _checkPassword(password);
+        await _store.decreasePrice(name, amount);
+        rs.send("OK");
+        return;
+      } catch (e) {
+        rs.send(e);
+        return;
+      }
+    }).post("/store/list-product", async (rq, rs) => {
+      try {
+        let { password, product } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && ProductDataSchema.safeParse(product).success;
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_REQUEST");
+        _checkPassword(password);
+        await _store.listProduct(product);
+        rs.send("ADMIN_ROUTER.OK");
+        return;
+      } catch (e) {
+        rs.send(e);
+        return;
+      }
+    }).post("/store/de-list-product", async (rq, rs) => {
+      try {
+        let { password, name } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && name !== null && name !== void 0 && typeof name === "string";
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_REQUEST");
+        _checkPassword(password);
+        await _store.deListProduct(name);
+        rs.send("ADMIN_ROUTER.OK");
+        return;
+      } catch (e) {
+        rs.send(e);
+        return;
+      }
+    }).post("/store/de-list-product-by-product", async (rq, rs) => {
+      try {
+        let { password, product } = rq.body;
+        let match = password !== null && password !== void 0 && typeof password === "string" && ProductDataSchema.safeParse(product).success;
+        (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_REQUEST");
+        _checkPassword(password);
+        await _store.deListProductByProduct(product);
+        rs.send("ADMIN_ROUTER.OK");
+        return;
+      } catch (e) {
+        rs.send(e);
+        return;
+      }
+    });
+  }
+  function _checkPassword(password) {
+    let adminPassword = process.env?.["ADMIN_PASSWORD"];
+    (0, import_reliq12.require)(adminPassword !== void 0, "ADMIN_ROUTER.ERR_ADMIN_PASSWORD_REQUIRED");
+    (0, import_reliq12.require)(adminPassword.trim().length !== 0, "ADMIN_ROUTER.ERR_INVALID_ADMIN_PASSWORD");
+    (0, import_reliq12.require)(adminPassword === password, "ADMIN_ROUTER.ERR_INCORRECT_PASSWORD");
     return;
-  }).post("/products/stock/increase", async (rq, rs) => {
-    try {
-      let { password, name, amount } = rq.body;
-      let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
-      (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
-      await store.increaseStock(name, amount);
-      rs.send("ADMIN_ROUTER.OK");
-    } catch (e) {
-      rs.send(e);
-    }
-    return;
-  }).post("/product/stock/decrease", async (rq, rs) => {
-    try {
-      let { password, name, amount } = rq.body;
-      let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount);
-      (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
-      await store.decreaseStock(name, amount);
-      rs.send("ADMIN_ROUTER.OK");
-    } catch (e) {
-      rs.send(e);
-    }
-    return;
-  }).post("/product/price/set", async (rq, rs) => {
-    try {
-      let { password, name, price } = rq.body;
-      let match = password !== null && password !== void 0 && typeof password === "string" && password.trim().length !== 0 && name !== null && name !== void 0 && typeof name === "string" && name.trim().length !== 0 && price !== null && price !== void 0 && typeof price === "number" && price >= 0 && price <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(price);
-      (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_INPUT");
-      await store.setPrice(name, price);
-      rs.send("ADMIN_ROUTER.OK");
-    } catch (e) {
-      rs.send(e);
-    }
-    return;
-  });
+  }
 }
 
 // src/server/router/react_router.ts
