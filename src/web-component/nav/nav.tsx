@@ -1,11 +1,11 @@
-// @ts-ignore
-import { default as logo } from "./public/img/Logo.png";
-
 import { ProductDataSchema } from "@common";
 import { ProductData } from "@common";
 import { z as ZodValidator } from "zod";
 import { NavButton } from "@web-component";
 import { NavCallToActionButton } from "@web-component";
+import { NavLogo } from "@web-component";
+import { NavSearchBar } from "@web-component";
+import { NavTagsDropDownButton } from "@web-component";
 import { require } from "reliq";
 import { useTags } from "@web-hook";
 import * as React from "react";
@@ -28,28 +28,13 @@ export function Nav(props: NavProps): React.ReactNode {
             gap: 40
         }
     };
-    let logo$: React.ComponentPropsWithRef<"div"> = {
-        style: {
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundImage: `url(${ logo })`,
-            backgroundSize: "contain",
-            backgroundPositionX: "center",
-            backgroundPositionY: "center",
-            backgroundRepeat: "no-repeat",
-            width: 150,
-            aspectRatio: 2 / 1
-        }
-    };
 
     return <>
         <div { ... container$ }>
-            <div { ... logo$ }/>
+            <NavLogo/>
             <NavCallToActionButton>For You</NavCallToActionButton>
-            
-            
+            <NavTagsDropDownButton tags={["Paint", "Wallpaper"]}>Materials</NavTagsDropDownButton>
+            <NavSearchBar/>
             <NavButton>Backet</NavButton>
         </div>
     </>;

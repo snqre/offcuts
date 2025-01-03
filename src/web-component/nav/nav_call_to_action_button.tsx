@@ -1,3 +1,4 @@
+import { NavCallToActionButtonStar } from "@web-component";
 import * as React from "react";
 import * as Constant from "@web-constant";
 
@@ -7,26 +8,63 @@ export type NavCallToActionButtonProps = {
 
 export function NavCallToActionButton(props: NavCallToActionButtonProps): React.ReactNode {
     let { children } = props;
-    let wrapper$: React.ComponentPropsWithRef<"button"> = {
+    let wrapper$: React.ComponentPropsWithRef<"div"> = {
         style: {
             all: "unset",
             display: "flex",
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            padding: 10,
             pointerEvents: "auto",
+            gap: 10,
+            position: "relative"
+        }
+    };
+    let leftWrapper$: React.ComponentPropsWithRef<"div"> = {
+        style: {
+            all: "unset",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "center",
+            position: "absolute",
+            left: -40,
+            top: -10
+        }
+    };
+    let rightWrapper$: React.ComponentPropsWithRef<"div"> = {
+        style: {
+            all: "unset",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+        }
+    };
+    let button$: React.ComponentPropsWithRef<"button"> = {
+        style: {
+            all: "unset",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            pointerEvents: "auto",
+            padding: 10,
             cursor: "pointer",
             fontSize: "0.75em",
             fontWeight: "normal",
             fontFamily: Constant.Theme.FONT_0,
             boxShadow: Constant.Theme.SHADOW,
+            background: Constant.Theme.DK_COLOR,
             color: Constant.Theme.LT_COLOR,
-            background: Constant.Theme.DK_COLOR
+            borderRadius: 5
         }
     };
 
     return <>
-        <button { ... wrapper$ }>{ children }</button>
+        <div { ... wrapper$ }>
+            <div { ... leftWrapper$ }><NavCallToActionButtonStar/></div>
+            <div { ... rightWrapper$ }><button { ... button$ }>{ children }</button></div>
+        </div>
     </>;
 }

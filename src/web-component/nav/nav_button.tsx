@@ -15,6 +15,7 @@ export function NavButton(props: NavButtonProps): React.ReactNode {
             justifyContent: "center",
             alignItems: "center",
             pointerEvents: "auto",
+            padding: 10,
             cursor: "pointer",
             fontSize: "0.75em",
             fontWeight: "normal",
