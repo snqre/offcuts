@@ -12,8 +12,12 @@ export function TableWrapper(props: TableWrapperProps): ReactNode {
             style={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "start",
-                alignItems: "center"
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                gap: 20,
+                overflowX: "hidden",
+                overflowY: "scroll"
             }}
             { ... more }>
             { children }

@@ -2,27 +2,23 @@ import type { ReactNode } from "react";
 import type { ComponentPropsWithRef } from "react";
 import { Theme } from "@web-constant";
 
-export type TableHeadingProps = 
+export type TableCaptionProps =
     & ComponentPropsWithRef<"div">
     & {};
 
-export function TableHeading(props: TableHeadingProps): ReactNode {
+export function TableCaption(props: TableCaptionProps): ReactNode {
     let { style, children, ... more } = props;
     return <>
         <div
             style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "start",
+                justifyContent: "center",
                 alignItems: "center",
-                fontSize: "1.25em",
+                fontSize: "2em",
                 fontWeight: "normal",
                 fontFamily: Theme.FONT_0,
                 color: Theme.DK_COLOR,
-                width: "100%",
-                height: "auto",
-                flexGrow: 1,
-                paddingBottom: 10,
                 ... style
             }}
             { ... more }>

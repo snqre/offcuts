@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
 import type { ComponentPropsWithRef } from "react";
 import { TableBody } from "@web-component";
+import { TableCaption } from "@web-component";
 import { TableHeading } from "@web-component";
 import { TableItem } from "@web-component";
 import { TableRow } from "@web-component";
+import { TableWrapper } from "@web-component";
 
 export type TableNativeProps = {
+    caption: ReactNode;
     headings: Array<ReactNode>;
     contents: Array<Array<ReactNode>>;
 };
@@ -17,32 +20,34 @@ export type TableProps =
     & {};
 
 export function Table(props: TableProps): ReactNode {
-    let { headings, contents, style, ... more } = props;
+    let { caption, headings, contents, style, ... more } = props;
     return <>
         <div
             style={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "start",
+                justifyContent: "center",
                 alignItems: "center",
-                gap: 10,
                 ... style
             }}
             { ... more }>
-            <TableRow>
-                { 
-                    headings.map(heading => <TableItem><TableHeading>{ heading }</TableHeading></TableItem>) 
+            <TableWrapper>
+                <TableRow><TableCaption>{ caption }</TableCaption></TableRow>
+                <TableRow>
+                    { 
+                        headings.map(heading => <TableItem><TableHeading>{ heading }</TableHeading></TableItem>) 
+                    }
+                </TableRow>
+                {
+                    contents.map(content =>
+                        <TableRow>
+                            {
+                                content.map(item => <TableItem><TableBody>{ item }</TableBody></TableItem>)
+                            }
+                        </TableRow>
+                    )
                 }
-            </TableRow>
-            {
-                contents.map(content =>
-                    <TableRow>
-                        {
-                            content.map(item => <TableItem><TableBody>{ item }</TableBody></TableItem>)
-                        }
-                    </TableRow>
-                )
-            }
+            </TableWrapper>
         </div>
     </>;
 }

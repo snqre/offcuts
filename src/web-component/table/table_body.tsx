@@ -13,7 +13,7 @@ export function TableBody(props: TableBodyProps): ReactNode {
             style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "center",
+                justifyContent: "start",
                 alignItems: "center",
                 fontSize: "1em",
                 fontWeight: "normal",

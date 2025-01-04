@@ -26,15 +26,18 @@ export function BasketPage(): ReactNode {
                         overflowY: "auto"
                     }}>
                     <Table
+                        caption={ "Checkout" }
+                        headings={ ["Product", "Price", "Amount"] }
+                        contents={
+                            [
+                                ["Wallpaper", "£69.43", "12"],
+                                ["Paint", "£30.00", "2"]
+                            ]
+                        }
                         style={{
-                            width: 900,
+                            width: 400,
                             height: "100%"
-                        }}
-                        headings={["Product", "Price", "Amount"]}
-                        contents={[
-                            ["Wallpaper", "£69.43", "12"],
-                            ["Paint", "£30.00", "2"]
-                        ]}/>
+                        }}/>
                 </div>
             </div>
         </ResponsiveAnchorPage>

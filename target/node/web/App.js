@@ -39061,7 +39061,7 @@ function TableBody(props) {
       style: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: "start",
         alignItems: "center",
         fontSize: "1em",
         fontWeight: "normal",
@@ -39077,9 +39077,9 @@ function TableBody(props) {
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-// src/web-component/table/table_heading.tsx
+// src/web-component/table/table_caption.tsx
 var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
-function TableHeading(props) {
+function TableCaption(props) {
   let { style, children, ...more } = props;
   return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
     children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
@@ -39087,6 +39087,28 @@ function TableHeading(props) {
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
+        alignItems: "center",
+        fontSize: "2em",
+        fontWeight: "normal",
+        fontFamily: exports_theme.FONT_0,
+        color: exports_theme.DK_COLOR,
+        ...style
+      },
+      ...more,
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+// src/web-component/table/table_heading.tsx
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+function TableHeading(props) {
+  let { style, children, ...more } = props;
+  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "start",
         alignItems: "center",
         fontSize: "1.25em",
         fontWeight: "normal",
@@ -39104,29 +39126,8 @@ function TableHeading(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table_item.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-function TableItem(props) {
-  let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
-      style: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "auto",
-        flexGrow: 1,
-        ...style
-      },
-      ...more,
-      children
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-// src/web-component/table/table_row.tsx
 var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-function TableRow(props) {
+function TableItem(props) {
   let { style, children, ...more } = props;
   return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
     children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
@@ -39145,46 +39146,94 @@ function TableRow(props) {
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-// src/web-component/table/table.tsx
+// src/web-component/table/table_row.tsx
 var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
-function Table(props) {
-  let { headings, contents, style, ...more } = props;
+function TableRow(props) {
+  let { style, children, ...more } = props;
   return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
     children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
       style: {
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "start",
+        flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
-        gap: 10,
+        width: "100%",
+        height: "auto",
+        flexGrow: 1,
         ...style
       },
       ...more,
-      children: [
-        /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TableRow, {
-          children: headings.map((heading) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TableItem, {
-            children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TableHeading, {
-              children: heading
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+// src/web-component/table/table_wrapper.tsx
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+function TableWrapper(props) {
+  let { style, children, ...more } = props;
+  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+        gap: 20,
+        overflowX: "hidden",
+        overflowY: "scroll"
+      },
+      ...more,
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+// src/web-component/table/table.tsx
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+function Table(props) {
+  let { caption, headings, contents, style, ...more } = props;
+  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        ...style
+      },
+      ...more,
+      children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableWrapper, {
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableRow, {
+            children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableCaption, {
+              children: caption
             }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableRow, {
+            children: headings.map((heading) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableItem, {
+              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableHeading, {
+                children: heading
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this))
+          }, undefined, false, undefined, this),
+          contents.map((content) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableRow, {
+            children: content.map((item) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableItem, {
+              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableBody, {
+                children: item
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this))
           }, undefined, false, undefined, this))
-        }, undefined, false, undefined, this),
-        contents.map((content) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TableRow, {
-          children: content.map((item) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TableItem, {
-            children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TableBody, {
-              children: item
-            }, undefined, false, undefined, this)
-          }, undefined, false, undefined, this))
-        }, undefined, false, undefined, this))
-      ]
-    }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 // src/web-page/basket_page.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 function BasketPage() {
-  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(ResponsiveAnchorPage, {
-      children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(ResponsiveAnchorPage, {
+      children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
         style: {
           display: "flex",
           flexDirection: "row",
@@ -39193,7 +39242,7 @@ function BasketPage() {
           width: "100%",
           height: "100%"
         },
-        children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+        children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "column",
@@ -39203,16 +39252,17 @@ function BasketPage() {
             overflowX: "scroll",
             overflowY: "auto"
           },
-          children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(Table, {
-            style: {
-              width: 900,
-              height: "100%"
-            },
+          children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Table, {
+            caption: "Checkout",
             headings: ["Product", "Price", "Amount"],
             contents: [
               ["Wallpaper", "\xA369.43", "12"],
               ["Paint", "\xA330.00", "2"]
-            ]
+            ],
+            style: {
+              width: 400,
+              height: "100%"
+            }
           }, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this)
@@ -39220,12 +39270,12 @@ function BasketPage() {
   }, undefined, false, undefined, this);
 }
 // src/web-page/home_page.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function HomePage() {
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(ResponsiveAnchorPage, {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(ResponsiveAnchorPage, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "row",
@@ -39239,7 +39289,7 @@ function HomePage() {
           },
           children: "OFFCUTS"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "row",
@@ -39249,18 +39299,18 @@ function HomePage() {
             gap: 20
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageSubHeadingTag, {
+            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageSubHeadingTag, {
               children: "Revive."
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageSubHeadingTag, {
+            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageSubHeadingTag, {
               children: "Reuse."
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageSubHeadingTag, {
+            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageSubHeadingTag, {
               children: "Rebuild."
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "row",
@@ -39270,18 +39320,18 @@ function HomePage() {
             gap: 20
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageCard, {
-              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageCardCaption, {
+            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCard, {
+              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCardCaption, {
                 children: "Why Offcuts?"
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageCard, {
-              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageCardCaption, {
+            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCard, {
+              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCardCaption, {
                 children: "For Contractors"
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageCard, {
-              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(HomePageCardCaption, {
+            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCard, {
+              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCardCaption, {
                 children: "For Buyers"
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this)
@@ -39292,8 +39342,8 @@ function HomePage() {
   }, undefined, false, undefined, this);
 }
 function HomePageSubHeadingTag({ children }) {
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39309,8 +39359,8 @@ function HomePageSubHeadingTag({ children }) {
   }, undefined, false, undefined, this);
 }
 function HomePageCard({ children }) {
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "column",
@@ -39322,8 +39372,8 @@ function HomePageCard({ children }) {
   }, undefined, false, undefined, this);
 }
 function HomePageCardCaption({ children }) {
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39348,23 +39398,23 @@ function render(app) {
   return;
 }
 // src/web/app.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 function App() {
-  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(BrowserRouter, {
-      children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Routes, {
+  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BrowserRouter, {
+      children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Routes, {
         children: [
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Route, {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Route, {
             path: "/",
-            element: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+            element: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(HomePage, {}, undefined, false, undefined, this)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Route, {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Route, {
             path: "/basket",
-            element: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(BasketPage, {}, undefined, false, undefined, this)
+            element: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BasketPage, {}, undefined, false, undefined, this)
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-render(/* @__PURE__ */ jsx_dev_runtime17.jsxDEV(App, {}, undefined, false, undefined, this));
+render(/* @__PURE__ */ jsx_dev_runtime19.jsxDEV(App, {}, undefined, false, undefined, this));
