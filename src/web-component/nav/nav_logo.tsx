@@ -2,6 +2,10 @@ import logo from "../../web/public/img/logo.png";
 import * as React from "react";
 
 export function NavLogo(): React.ReactNode {
+    let image: React.ComponentPropsWithRef<"div"> = {};
+
+
+
     let image$: React.ComponentPropsWithRef<"div"> = {
         style: {
             display: "flex",

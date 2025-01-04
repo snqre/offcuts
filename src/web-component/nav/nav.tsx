@@ -6,6 +6,7 @@ import { NavCallToActionButton } from "@web-component";
 import { NavLogo } from "@web-component";
 import { NavSearchBar } from "@web-component";
 import { NavTagsDropDownButton } from "@web-component";
+import { Link } from "react-router-dom";
 import { require } from "reliq";
 import { useTags } from "@web-hook";
 import * as React from "react";
@@ -35,7 +36,13 @@ export function Nav(props: NavProps): React.ReactNode {
             <NavCallToActionButton>For You</NavCallToActionButton>
             <NavTagsDropDownButton tags={["Paint", "Wallpaper"]}>Materials</NavTagsDropDownButton>
             <NavSearchBar/>
-            <NavButton>Backet</NavButton>
+            <Link
+                to={ "/basket" }
+                style={{
+                    all: "unset"
+                }}>
+                <NavButton>Basket</NavButton>
+            </Link>
         </div>
     </>;
 }
