@@ -43,6 +43,13 @@ export function Nav(props: NavProps): React.ReactNode {
                 }}>
                 <NavButton>Basket</NavButton>
             </Link>
+            <Link
+                to={ "/admin" }
+                style={{
+                    all: "unset"
+                }}>
+                <NavButton>Admin</NavButton>
+            </Link>
         </div>
     </>;
 }

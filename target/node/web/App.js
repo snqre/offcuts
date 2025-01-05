@@ -3362,7 +3362,7 @@ var require_react_dom_development = __commonJS((exports) => {
       var HostPortal = 4;
       var HostComponent = 5;
       var HostText = 6;
-      var Fragment14 = 7;
+      var Fragment20 = 7;
       var Mode = 8;
       var ContextConsumer = 9;
       var ContextProvider = 10;
@@ -4319,7 +4319,7 @@ var require_react_dom_development = __commonJS((exports) => {
             return "DehydratedFragment";
           case ForwardRef:
             return getWrappedName$1(type, type.render, "ForwardRef");
-          case Fragment14:
+          case Fragment20:
             return "Fragment";
           case HostComponent:
             return type;
@@ -12388,7 +12388,7 @@ var require_react_dom_development = __commonJS((exports) => {
           }
         }
         function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-          if (current2 === null || current2.tag !== Fragment14) {
+          if (current2 === null || current2.tag !== Fragment20) {
             var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
             created.return = returnFiber;
             return created;
@@ -12790,7 +12790,7 @@ var require_react_dom_development = __commonJS((exports) => {
             if (child.key === key) {
               var elementType = element.type;
               if (elementType === REACT_FRAGMENT_TYPE) {
-                if (child.tag === Fragment14) {
+                if (child.tag === Fragment20) {
                   deleteRemainingChildren(returnFiber, child.sibling);
                   var existing = useFiber(child, element.props.children);
                   existing.return = returnFiber;
@@ -18117,7 +18117,7 @@ var require_react_dom_development = __commonJS((exports) => {
             var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
             return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
           }
-          case Fragment14:
+          case Fragment20:
             return updateFragment(current2, workInProgress2, renderLanes2);
           case Mode:
             return updateMode(current2, workInProgress2, renderLanes2);
@@ -18384,7 +18384,7 @@ var require_react_dom_development = __commonJS((exports) => {
           case SimpleMemoComponent:
           case FunctionComponent:
           case ForwardRef:
-          case Fragment14:
+          case Fragment20:
           case Mode:
           case Profiler:
           case ContextConsumer:
@@ -22594,7 +22594,7 @@ var require_react_dom_development = __commonJS((exports) => {
         return fiber;
       }
       function createFiberFromFragment(elements, mode, lanes, key) {
-        var fiber = createFiber(Fragment14, elements, key, mode);
+        var fiber = createFiber(Fragment20, elements, key, mode);
         fiber.lanes = lanes;
         return fiber;
       }
@@ -30211,6 +30211,28 @@ var require_client = __commonJS((exports) => {
   var i;
 });
 
+// src/web-component/cli/cli_line.tsx
+var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
+function CliLine(props) {
+  {
+    let { style, children, ...more } = props;
+    return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
+      children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+          padding: 5
+        },
+        ...more,
+        children
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this);
+  }
+}
+// src/web-component/cli/cli_loader.tsx
+var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 // src/web-constant/box_shadow.ts
 var exports_box_shadow = {};
 __export(exports_box_shadow, {
@@ -30359,8 +30381,156 @@ var SP_COLOR = exports_color_pallete.OFFCUT_YELLOW;
 var LT_COLOR = exports_color_pallete.SNOW;
 var DK_COLOR = exports_color_pallete.NAVY;
 var SHADOW = exports_box_shadow.TAILWIND_0;
+// src/web-component/cli/cli.tsx
+var import_react = __toESM(require_react(), 1);
+var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+var _LINE_SYMBOL = ">";
+function Cli(props) {
+  let [_history, _setHistory] = import_react.useState([]);
+  let [_input, _setInput] = import_react.useState(_line());
+  {
+    let { style, children, ...more } = props;
+    return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(jsx_dev_runtime3.Fragment, {
+      children: /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+          fontSize: "0.75em",
+          fontWeight: "normal",
+          fontFamily: "monospace",
+          overflowX: "hidden",
+          overflowY: "scroll",
+          boxShadow: exports_theme.SHADOW,
+          gap: 10,
+          padding: 10,
+          ...style
+        },
+        ...more,
+        children: [
+          _history.map((line, k) => /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+            children: line
+          }, k, false, undefined, this)),
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("input", {
+            type: "text",
+            value: _input,
+            onChange: (e) => _setInput(e.target.value),
+            onKeyDown: (e) => {
+              if (e.key === "Enter" && _input.trim() !== "") {
+                _addInputToHistory(_input);
+                _setInput(_line());
+                return;
+              }
+              return;
+            },
+            style: {
+              all: "unset",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              width: "100%",
+              height: "auto",
+              flexGrow: 1
+            }
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this);
+  }
+  async function _execute(command) {
+  }
+  function _addInputToHistory(input) {
+    _setHistory((history) => [...history, /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CliLine, {
+      children: input
+    }, undefined, false, undefined, this)]);
+    return;
+  }
+  function _line() {
+    return `${_LINE_SYMBOL} `;
+  }
+}
+// src/web-component/form/form_button.tsx
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+function FormButton(props) {
+  let { style, children, ...more } = props;
+  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(jsx_dev_runtime4.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("button", {
+      style: {
+        all: "unset",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        fontSize: "1em",
+        fontWeight: "normal",
+        fontFamily: exports_theme.FONT_0,
+        color: exports_theme.LT_COLOR,
+        boxShadow: exports_theme.SHADOW,
+        background: exports_theme.DK_COLOR,
+        padding: 5,
+        borderRadius: 5,
+        width: "100%",
+        height: "auto",
+        flexGrow: 1,
+        ...style
+      },
+      ...more,
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+// src/web-component/form/form_input.tsx
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+function FormInput(props) {
+  let { style, children, ...more } = props;
+  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("input", {
+      style: {
+        all: "unset",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "auto",
+        flexGrow: 1,
+        ...style
+      },
+      ...more
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+// src/web-component/form/form.tsx
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+function Form(props) {
+  let { style, children, ...more } = props;
+  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "center",
+        fontSize: "1em",
+        fontWeight: "normal",
+        fontFamily: exports_theme.FONT_0,
+        color: exports_theme.DK_COLOR,
+        boxShadow: exports_theme.SHADOW,
+        padding: 20,
+        borderRadius: 5,
+        gap: 20,
+        ...style
+      },
+      ...more,
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
 // src/web-component/nav/nav_button.tsx
-var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 function NavButton(props) {
   let { children } = props;
   let wrapper$ = {
@@ -30380,8 +30550,8 @@ function NavButton(props) {
       color: exports_theme.DK_COLOR
     }
   };
-  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("button", {
       ...wrapper$,
       children
     }, undefined, false, undefined, this)
@@ -30391,7 +30561,7 @@ function NavButton(props) {
 var big_star_and_smaller_star_default = "./big_star_and_smaller_star-3e20r8j1.png";
 
 // src/web-component/nav/nav_call_to_action_button_star.tsx
-var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 function NavCallToActionButtonStar() {
   let image$ = {
     style: {
@@ -30408,14 +30578,14 @@ function NavCallToActionButtonStar() {
       aspectRatio: 1 / 1
     }
   };
-  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
       ...image$
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 // src/web-component/nav/nav_call_to_action_button.tsx
-var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function NavCallToActionButton(props) {
   let { children } = props;
   let wrapper$ = {
@@ -30470,17 +30640,17 @@ function NavCallToActionButton(props) {
       borderRadius: 5
     }
   };
-  return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(jsx_dev_runtime3.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(jsx_dev_runtime9.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
       ...wrapper$,
       children: [
-        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           ...leftWrapper$,
-          children: /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(NavCallToActionButtonStar, {}, undefined, false, undefined, this)
+          children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(NavCallToActionButtonStar, {}, undefined, false, undefined, this)
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           ...rightWrapper$,
-          children: /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("button", {
+          children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
             ...button$,
             children
           }, undefined, false, undefined, this)
@@ -30493,7 +30663,7 @@ function NavCallToActionButton(props) {
 var logo_default = "./logo-tsnr81fk.png";
 
 // src/web-component/nav/nav_logo.tsx
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 function NavLogo() {
   let image = {};
   let image$ = {
@@ -30511,14 +30681,14 @@ function NavLogo() {
       aspectRatio: 2 / 1
     }
   };
-  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(jsx_dev_runtime4.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
       ...image$
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 // src/web-component/nav/nav_search_bar.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function NavSearchBar() {
   let container$ = {
     style: {
@@ -30533,10 +30703,10 @@ function NavSearchBar() {
   let input$ = {
     style: {}
   };
-  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
       ...container$,
-      children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("input", {
+      children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("input", {
         ...input$
       }, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
@@ -30544,7 +30714,7 @@ function NavSearchBar() {
 }
 // src/web-component/nav/nav_tags_drop_down_button.tsx
 var React = __toESM(require_react(), 1);
-var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 function NavTagsDropDownButton(props) {
   let { tags, children } = props;
   let [toggled, setToggled] = React.useState(false);
@@ -30599,19 +30769,19 @@ function NavTagsDropDownButton(props) {
       color: exports_theme.DK_COLOR
     }
   };
-  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
       ...container$,
       children: [
-        /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
           ...button$,
           children
         }, undefined, false, undefined, this),
-        toggled ? /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
-          children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+        toggled ? /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+          children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
             ...dropDownContainer$,
-            children: tags.map((tag) => /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
-              children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+            children: tags.map((tag) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+              children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
                 ...dropDownOption$,
                 children: tag
               }, undefined, false, undefined, this)
@@ -32182,7 +32352,7 @@ var NavLink = React10.forwardRef(function NavLinkWithRef({
   }, typeof children === "function" ? children(renderProps) : children);
 });
 NavLink.displayName = "NavLink";
-var Form = React10.forwardRef(({
+var Form2 = React10.forwardRef(({
   discover = "render",
   fetcherKey,
   navigate,
@@ -32228,7 +32398,7 @@ var Form = React10.forwardRef(({
     "data-discover": !isAbsolute && discover === "render" ? "true" : undefined
   });
 });
-Form.displayName = "Form";
+Form2.displayName = "Form";
 function ScrollRestoration({
   getKey,
   storageKey,
@@ -32491,11 +32661,11 @@ function useViewTransitionState(to, opts = {}) {
 var encoder = new TextEncoder;
 
 // src/web-hook/device.ts
-var import_react = __toESM(require_react(), 1);
 var import_react2 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 function useDevice() {
-  let [device, setDevice] = import_react.useState("DEVICE.LAPTOP");
-  import_react2.useEffect(() => {
+  let [device, setDevice] = import_react2.useState("DEVICE.LAPTOP");
+  import_react3.useEffect(() => {
     function resize() {
       if (window.innerWidth >= 1024)
         setDevice("DEVICE.LAPTOP");
@@ -38937,7 +39107,7 @@ async function _products() {
   return data2;
 }
 // src/web-component/nav/nav.tsx
-var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 function Nav(props) {
   let tags = useTags();
   let container$ = {
@@ -38952,26 +39122,35 @@ function Nav(props) {
       gap: 40
     }
   };
-  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
       ...container$,
       children: [
-        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(NavLogo, {}, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(NavCallToActionButton, {
+        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(NavLogo, {}, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(NavCallToActionButton, {
           children: "For You"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(NavTagsDropDownButton, {
+        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(NavTagsDropDownButton, {
           tags: ["Paint", "Wallpaper"],
           children: "Materials"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(NavSearchBar, {}, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(Link, {
+        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(NavSearchBar, {}, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(Link, {
           to: "/basket",
           style: {
             all: "unset"
           },
-          children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(NavButton, {
+          children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(NavButton, {
             children: "Basket"
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(Link, {
+          to: "/admin",
+          style: {
+            all: "unset"
+          },
+          children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(NavButton, {
+            children: "Admin"
           }, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
       ]
@@ -38979,7 +39158,7 @@ function Nav(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/page/responsive_anchor_page.tsx
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 function ResponsiveAnchorPage(props) {
   let { style, children, ...more } = props;
   let device2 = useDevice();
@@ -39026,22 +39205,22 @@ function ResponsiveAnchorPage(props) {
       return 320;
     return 0;
   }
-  return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
       ...wrapper$,
-      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
         ...innerWrapper$,
         children: [
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(Nav, {
-            categories: [/* @__PURE__ */ jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(Nav, {
+            categories: [/* @__PURE__ */ jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
               children: "Paint"
-            }, undefined, false, undefined, this), /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
+            }, undefined, false, undefined, this), /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
               children: "Wood"
-            }, undefined, false, undefined, this), /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
+            }, undefined, false, undefined, this), /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
               children: "Steel"
             }, undefined, false, undefined, this)]
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
             ...contentWrapper$,
             children
           }, undefined, false, undefined, this)
@@ -39051,13 +39230,13 @@ function ResponsiveAnchorPage(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/page/responsive_page.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
 // src/web-component/table/table_body.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function TableBody(props) {
   let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39078,11 +39257,11 @@ function TableBody(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table_caption.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 function TableCaption(props) {
   let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39100,11 +39279,11 @@ function TableCaption(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table_heading.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function TableHeading(props) {
   let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39126,11 +39305,11 @@ function TableHeading(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table_item.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 function TableItem(props) {
   let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39147,11 +39326,11 @@ function TableItem(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table_row.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
 function TableRow(props) {
   let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39168,11 +39347,11 @@ function TableRow(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table_wrapper.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 function TableWrapper(props) {
   let { style, children, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "column",
@@ -39189,11 +39368,11 @@ function TableWrapper(props) {
   }, undefined, false, undefined, this);
 }
 // src/web-component/table/table.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 function Table(props) {
   let { caption, headings, contents, style, ...more } = props;
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "column",
@@ -39202,23 +39381,23 @@ function Table(props) {
         ...style
       },
       ...more,
-      children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableWrapper, {
+      children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableWrapper, {
         children: [
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableRow, {
-            children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableCaption, {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableRow, {
+            children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableCaption, {
               children: caption
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableRow, {
-            children: headings.map((heading) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableItem, {
-              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableHeading, {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableRow, {
+            children: headings.map((heading) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableItem, {
+              children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableHeading, {
                 children: heading
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this))
           }, undefined, false, undefined, this),
-          contents.map((content) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableRow, {
-            children: content.map((item) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableItem, {
-              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TableBody, {
+          contents.map((content) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableRow, {
+            children: content.map((item) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableItem, {
+              children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TableBody, {
                 children: item
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this))
@@ -39228,12 +39407,73 @@ function Table(props) {
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
+// src/web-page/admin_page.tsx
+var import_react4 = __toESM(require_react(), 1);
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+function AdminPage() {
+  let products = import_react4.useState([]);
+  return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(jsx_dev_runtime23.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(ResponsiveAnchorPage, {
+      children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
+          flexGrow: 1
+        },
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Cli, {}, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Form, {
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(FormInput, {
+                type: "text",
+                placeholder: "Paint"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(FormInput, {
+                type: "text",
+                placeholder: "Price"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(FormInput, {
+                type: "text",
+                placeholder: "Stock"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(FormInput, {
+                type: "text",
+                placeholder: "Tags"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(FormButton, {
+                onClick: () => {
+                },
+                children: "Confirm"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Table, {
+            caption: "Products",
+            headings: ["Product", "Price", "Stock", "Tags"],
+            contents: [
+              ...products[0].map((product) => [product.name, product.price, product.stock, product.tags])
+            ],
+            style: {
+              width: "100%",
+              height: "auto",
+              flexGrow: 1
+            }
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
 // src/web-page/basket_page.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 function BasketPage() {
-  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(ResponsiveAnchorPage, {
-      children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(jsx_dev_runtime24.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(ResponsiveAnchorPage, {
+      children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
         style: {
           display: "flex",
           flexDirection: "row",
@@ -39242,7 +39482,7 @@ function BasketPage() {
           width: "100%",
           height: "100%"
         },
-        children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+        children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "column",
@@ -39252,7 +39492,7 @@ function BasketPage() {
             overflowX: "scroll",
             overflowY: "auto"
           },
-          children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Table, {
+          children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(Table, {
             caption: "Checkout",
             headings: ["Product", "Price", "Amount"],
             contents: [
@@ -39270,12 +39510,12 @@ function BasketPage() {
   }, undefined, false, undefined, this);
 }
 // src/web-page/home_page.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
 function HomePage() {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(ResponsiveAnchorPage, {
+  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(jsx_dev_runtime25.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(ResponsiveAnchorPage, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "row",
@@ -39289,7 +39529,7 @@ function HomePage() {
           },
           children: "OFFCUTS"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "row",
@@ -39299,18 +39539,18 @@ function HomePage() {
             gap: 20
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageSubHeadingTag, {
+            /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageSubHeadingTag, {
               children: "Revive."
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageSubHeadingTag, {
+            /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageSubHeadingTag, {
               children: "Reuse."
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageSubHeadingTag, {
+            /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageSubHeadingTag, {
               children: "Rebuild."
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
           style: {
             display: "flex",
             flexDirection: "row",
@@ -39320,18 +39560,18 @@ function HomePage() {
             gap: 20
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCard, {
-              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCardCaption, {
+            /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageCard, {
+              children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageCardCaption, {
                 children: "Why Offcuts?"
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCard, {
-              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCardCaption, {
+            /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageCard, {
+              children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageCardCaption, {
                 children: "For Contractors"
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCard, {
-              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(HomePageCardCaption, {
+            /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageCard, {
+              children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(HomePageCardCaption, {
                 children: "For Buyers"
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this)
@@ -39342,8 +39582,8 @@ function HomePage() {
   }, undefined, false, undefined, this);
 }
 function HomePageSubHeadingTag({ children }) {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(jsx_dev_runtime25.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39359,8 +39599,8 @@ function HomePageSubHeadingTag({ children }) {
   }, undefined, false, undefined, this);
 }
 function HomePageCard({ children }) {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(jsx_dev_runtime25.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "column",
@@ -39372,8 +39612,8 @@ function HomePageCard({ children }) {
   }, undefined, false, undefined, this);
 }
 function HomePageCardCaption({ children }) {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(jsx_dev_runtime25.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
       style: {
         display: "flex",
         flexDirection: "row",
@@ -39398,23 +39638,27 @@ function render(app) {
   return;
 }
 // src/web/app.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
 function App() {
-  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BrowserRouter, {
-      children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Routes, {
+  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(jsx_dev_runtime26.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(BrowserRouter, {
+      children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Routes, {
         children: [
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Route, {
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Route, {
             path: "/",
-            element: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+            element: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(HomePage, {}, undefined, false, undefined, this)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Route, {
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Route, {
             path: "/basket",
-            element: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BasketPage, {}, undefined, false, undefined, this)
+            element: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(BasketPage, {}, undefined, false, undefined, this)
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Route, {
+            path: "/admin",
+            element: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(AdminPage, {}, undefined, false, undefined, this)
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-render(/* @__PURE__ */ jsx_dev_runtime19.jsxDEV(App, {}, undefined, false, undefined, this));
+render(/* @__PURE__ */ jsx_dev_runtime26.jsxDEV(App, {}, undefined, false, undefined, this));
