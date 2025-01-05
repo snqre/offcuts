@@ -3,11 +3,11 @@ import type { ComponentPropsWithRef } from "react";
 import { Theme } from "@web-constant";
 
 export type FormInputProps =
-    & ComponentPropsWithRef<"input">
+    & Omit<ComponentPropsWithRef<"input">, "children">
     & {};
 
 export function FormInput(props: FormInputProps): ReactNode {
-    let { style, children, ... more } = props;
+    let { style, ... more } = props;
 
     return <>
         <input
@@ -22,8 +22,6 @@ export function FormInput(props: FormInputProps): ReactNode {
                 flexGrow: 1,
                 ... style
             }}
-            { ... more }>
-            { children }
-        </input>
+            { ... more }/>
     </>;
 }

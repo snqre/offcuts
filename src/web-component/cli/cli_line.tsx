@@ -6,17 +6,20 @@ export type CliLineProps =
     & {};
 
 export function CliLine(props: CliLineProps): ReactNode {
+    let { style, children, ... more } = props;
+
     /** @constructor */ {
-        let { style, children, ... more } = props;
-        
         return <>
             <div
                 style={{
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "start",
+                    justifyContent: "center",
                     alignItems: "center",
-                    padding: 5
+                    padding: 5,
+                    width: "100%",
+                    height: "auto",
+                    flexGrow: 1
                 }}
                 { ... more }>
                 { children }

@@ -467,7 +467,7 @@ function Server() {
     let store = Store(redis);
     let port = 8080;
     let socket = (0, import_express4.default)().use(import_express4.default.static((0, import_path.join)(__dirname, "web"))).use(import_express4.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).use(StoreRouter(store)).use(AdminRouter(store)).listen(port);
-    console.log("SERVER.RUNNING", port);
+    console.log("SERVER.RUNNING", __dirname, port);
     return;
   }
 }

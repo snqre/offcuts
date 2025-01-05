@@ -32,7 +32,7 @@ export function Server(): Server {
             .use(StoreRouter(store))
             .use(AdminRouter(store))
             .listen(port);
-        console.log("SERVER.RUNNING", port);
+        console.log("SERVER.RUNNING", __dirname, port);
         return;
     }
 }

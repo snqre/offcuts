@@ -24,44 +24,22 @@ export function AdminPage(): ReactNode {
                     height: "100%",
                     flexGrow: 1
                 }}>
-                <Cli/>
-                
-                <Form>
-                    <FormInput 
-                        type="text"
-                        placeholder="Paint"/>
-                    <FormInput
-                        type="text"
-                        placeholder="Price"/>
-                    <FormInput
-                        type="text"
-                        placeholder="Stock"/>
-                    <FormInput
-                        type="text"
-                        placeholder="Tags"/>
-                    <FormButton
-                        onClick={
-                            () => {
-
-                            }
-                        }>
-                        Confirm
-                    </FormButton>
-                </Form>
-
-                <Table
-                    caption={ "Products" }
-                    headings={ ["Product", "Price", "Stock", "Tags"] }
-                    contents={
-                        [
-                            ... products[0].map(product => [product.name, product.price, product.stock, product.tags])
-                        ]
-                    }
+                <Cli
                     style={{
-                        width: "100%",
-                        height: "auto",
-                        flexGrow: 1
-                    }}/>
+                        width: 600
+                    }}
+                    execute={
+                        async args => {
+                            if (args[1] === "help") {
+                                return `
+                                    Commands:\n
+                                    -help 
+                                `;
+                            }
+
+                            return "Hello World"
+                        }
+                    }/>
             </div>
         </ResponsiveAnchorPage>
     </>;

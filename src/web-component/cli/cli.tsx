@@ -3,13 +3,15 @@ import type { ReactNode } from "react";
 import type { ComponentPropsWithRef } from "react";
 import type { AsyncFunction } from "reliq";
 import { CliLine } from "@web-component";
+import { CliInputLine } from "@web-component";
 import { CliLoader } from "@web-component";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const _LINE_SYMBOL: string = ">";
 
 export type CliNativeProps = {
-
+    execute: AsyncFunction<Array<string>, string | undefined>;
 };
 
 export type CliProps = 
@@ -18,87 +20,93 @@ export type CliProps =
     & {};
 
 export function Cli(props: CliProps): ReactNode {
-    let [_history, _setHistory] = useState<Array<ReactNode>>([]);
-    let [_input, _setInput] = useState<string>(_line());
-
+    let { execute, style, children, ... more } = props;
+    let [last, setLast] = useState<Array<string>>([]);
+    let [input, setInput] = useState<string>("@admin: ");
+    
     /** @constructor */ {
-        let { style, children, ... more } = props;
-
         return <>
             <div
                 style={{
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "start",
-                    alignItems: "start",
-                    fontSize: "0.75em",
-                    fontWeight: "normal",
-                    fontFamily: "monospace",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: 20,
+                    boxShadow: Theme.SHADOW,
+                    width: "auto",
+                    height: "auto",
                     overflowX: "hidden",
                     overflowY: "scroll",
-                    boxShadow: Theme.SHADOW,
-                    gap: 10,
-                    padding: 10,
                     ... style
                 }}
                 { ... more }>
-                {
-                    _history.map((line, k) => <div key={k}>{ line }</div>)
-                }
-                <input
-                    type="text"
-                    value={ _input }
-                    onChange={ e => _setInput(e.target.value) }
-                    onKeyDown={
-                        e => {
-                            _output()
-                            new Promise(resolve => {
-
-                            })
-                                .then()
-                            async () => {
-
-                            }
-                            if (e.key === "Enter" && _input.trim() !== "") {
-                                _output(_input);
-                                _setInput(_line());
-                                
-                                return;
-                            }
-                            return;
-                        }
-                    }
+                <div
                     style={{
                         all: "unset",
                         display: "flex",
-                        flexDirection: "row",
+                        flexDirection: "column",
                         justifyContent: "start",
                         alignItems: "center",
                         width: "100%",
-                        height: "auto",
-                        flexGrow: 1
-                    }}/>
+                        height: "100%",
+                        flex: 1,
+                        gap: 10
+                    }}>
+                    {
+                        last.map(line => 
+                            <>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "start",
+                                        alignItems: "center",
+                                        width: "100%",
+                                        height: "auto",
+                                        flex: 1,
+                                        fontSize: "0.75em",
+                                        fontWeight: "normal",
+                                        fontFamily: "monospace"
+                                    }}>
+                                    { line }
+                                </div>
+                            </>
+                        )
+                    }
+                    <input
+                        style={{
+                            all: "unset",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "start",
+                            alignItems: "center",
+                            width: "100%",
+                            height: "auto",
+                            flex: 1,
+                            fontSize: "0.75em",
+                            fontWeight: "normal",
+                            fontFamily: "monospace"
+                        }}
+                        type="text"
+                        value={ input }
+                        onChange={ e => setInput(e.target.value) }
+                        onKeyDown={
+                            e => {
+                                if (e.key === "Enter" && input.trim() !== "") {
+                                    let command: string = input;
+                                    setInput("@admin ");
+                                    setLast(last => [... last, command]);
+                                    execute((command.split(" ")))
+                                        .then(response => response ? setLast(last => [... last, `@offcuts: ${ response }`]) : undefined)
+                                        .catch(e => [... last, `offcuts: ${ e }`]);
+                                    return;
+                                }
+                                return;
+                            }
+                        }/>
+                </div>
             </div>
         </>;
-    }
-
-    async function _execute(command: string): string {
-
-    }
-
-
-    async function _load(outcome: AsyncFunction<void, ReactNode>) {
-        _addToHistory(<CliLoader/>);
-        _addToHistory((await outcome()));
-        return;
-    }
-
-    function _addToHistory(line: ReactNode): void {
-        _setHistory(history => [... history, line]);
-        return;
-    }
-
-    function _line(): string {
-        return `${ _LINE_SYMBOL } `;
     }
 }

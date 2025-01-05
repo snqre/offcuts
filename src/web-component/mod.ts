@@ -1,3 +1,4 @@
+export * from "./cli/cli_input_line";
 export * from "./cli/cli_line";
 export * from "./cli/cli_loader";
 export * from "./cli/cli";
