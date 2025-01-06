@@ -39,8 +39,13 @@ export function Nav(props: NavProps): React.ReactNode {
     return <>
         <div { ... container$ }>
             <NavLogo/>
-            <NavCallToActionButton>For You</NavCallToActionButton>
-            <NavTagsDropDownButton tags={["Paint", "Wallpaper"]}>Materials</NavTagsDropDownButton>
+
+            <NavButtonGroup>
+                <NavCallToActionButton>For You</NavCallToActionButton>
+                <NavTagsDropDownButton tags={["Paint", "Wallpaper"]}>Materials</NavTagsDropDownButton>
+            </NavButtonGroup>
+            
+
             <NavSearchBar/>
 
             <NavButtonGroup>
