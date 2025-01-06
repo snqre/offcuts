@@ -1,14 +1,13 @@
-import { ProductDataSchema } from "@common";
-import { ProductData } from "@common";
-import { z as ZodValidator } from "zod";
 import { NavButton } from "@web-component";
 import { NavCallToActionButton } from "@web-component";
 import { NavLogo } from "@web-component";
 import { NavSearchBar } from "@web-component";
 import { NavTagsDropDownButton } from "@web-component";
 import { NavButtonGroup } from "@web-component";
+import { NavSignInSignUpButton } from "@web-component";
+import { NavSignInForm } from "@web-component";
+import { NavSignUpForm } from "@web-component";
 import { Link } from "@web-component";
-import { require } from "reliq";
 import { useTags } from "@web-hook";
 import * as React from "react";
 
@@ -47,15 +46,17 @@ export function Nav(props: NavProps): React.ReactNode {
             <NavButtonGroup>
                 <Link
                     to={ "/basket" }>
-                    <NavButton
-                        icon={basketIcon}>
+                    <NavButton>
                         Basket
                     </NavButton>
                 </Link>
+                <NavSignInSignUpButton
+                    signUpForm={ <NavSignUpForm/> }
+                    signInForm={ <NavSignInForm/> }/>
                 <Link
                     to={ "/admin" }>
                     <NavButton
-                        icon={adminIcon}>
+                        icon={ adminIcon }>
                     </NavButton>
                 </Link>
             </NavButtonGroup>

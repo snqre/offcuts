@@ -46,7 +46,7 @@ export function NavButton(props: NavButtonProps): ReactNode {
                             backgroundPositionY: "center",
                             backgroundSize: "contain",
                             backgroundRepeat: "no-repeat",
-                            width: 20,
+                            width: 15,
                             aspectRatio: 1 / 1
                         }}/> :
                     undefined

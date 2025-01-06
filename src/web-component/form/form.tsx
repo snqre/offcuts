@@ -18,7 +18,7 @@ export function Form(props: FormProps): ReactNode {
                 alignItems: "center",
                 fontSize: "1em",
                 fontWeight: "normal",
-                fontFamily: Theme.FONT_0,
+                fontFamily: Theme.FONT_1,
                 color: Theme.DK_COLOR,
                 boxShadow: Theme.SHADOW,
                 padding: 20,

@@ -11,7 +11,7 @@ export function Link(props: LinkProps): ReactNode {
     
     /** @constructor */ {
         return <>
-            <Link
+            <ReactLink
                 style={{
                     all: "unset",
                     display: "flex",
@@ -22,7 +22,7 @@ export function Link(props: LinkProps): ReactNode {
                 }}
                 { ... more }>
                 { children }
-            </Link>
+            </ReactLink>
         </>;
     }
 }

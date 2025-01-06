@@ -20,7 +20,7 @@ export function FormButton(props: FormButtonProps): ReactNode {
                 cursor: "pointer",
                 fontSize: "1em",
                 fontWeight: "normal",
-                fontFamily: Theme.FONT_0,
+                fontFamily: Theme.FONT_1,
                 color: Theme.LT_COLOR,
                 boxShadow: Theme.SHADOW,
                 background: Theme.DK_COLOR,
