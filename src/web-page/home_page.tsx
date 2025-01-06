@@ -72,7 +72,7 @@ export function HomePageSubHeadingTag({ children }: HomePageSubHeadingTagProps):
                 alignItems: "center",
                 fontSize: "2em",
                 fontWeight: "normal",
-                fontFamily: Theme.FONT_0,
+                fontFamily: Theme.FONT_1,
                 color: Theme.SP_COLOR
             }}>
             { children }
@@ -114,7 +114,7 @@ export function HomePageCardCaption({ children }: HomePageCardCaptionProps): Rea
                 alignItems: "center",
                 fontSize: "2em",
                 fontWeight: "normal",
-                fontFamily: Theme.FONT_0,
+                fontFamily: Theme.FONT_1,
                 color: Theme.SP_COLOR
             }}>
             { children }

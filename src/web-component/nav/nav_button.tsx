@@ -1,31 +1,70 @@
-import * as React from "react";
-import * as Constant from "@web-constant";
+import type { ReactNode } from "react";
+import type { ComponentPropsWithRef } from "react";
+import { Theme } from "@web-constant";
 
-export type NavButtonProps = {
-    children: React.ReactNode;
+export type NavButtonNativeProps = {
+    icon?: string;
 };
 
-export function NavButton(props: NavButtonProps): React.ReactNode {
-    let { children } = props;
-    let wrapper$: React.ComponentPropsWithRef<"button"> = {
-        style: {
-            all: "unset",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            pointerEvents: "auto",
-            padding: 10,
-            cursor: "pointer",
-            fontSize: "0.75em",
-            fontWeight: "normal",
-            fontFamily: Constant.Theme.FONT_0,
-            boxShadow: Constant.Theme.SHADOW,
-            color: Constant.Theme.DK_COLOR
-        }
-    };
+export type NavButtonProps =
+    & ComponentPropsWithRef<"button">
+    & NavButtonNativeProps
+    & {};
 
-    return <>
-        <button { ... wrapper$ }>{ children }</button>
-    </>;
+export function NavButton(props: NavButtonProps): ReactNode {
+    let { icon, style, children, ... more } = props;
+
+    /** @constructor */ {
+        return <>
+            <button
+                style={{
+                    all: "unset",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    padding: 10,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderStyle: "solid",
+                    borderColor: "#F1E4E4",
+                    gap: 5,
+                    ... style
+                }}
+                { ... more }>
+                {
+                    icon ?
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundImage: `url(${ icon })`,
+                            backgroundPositionX: "center",
+                            backgroundPositionY: "center",
+                            backgroundSize: "contain",
+                            backgroundRepeat: "no-repeat",
+                            width: 20,
+                            aspectRatio: 1 / 1
+                        }}/> :
+                    undefined
+                }
+                {
+                    children ?
+                    <div
+                        style={{
+                            fontSize: "0.75em",
+                            fontWeight: "normal",
+                            fontFamily: Theme.FONT_1,
+                            color: Theme.DK_COLOR
+                        }}>
+                        { children }
+                    </div> :
+                    undefined
+                }
+            </button>
+        </>;
+    }
 }

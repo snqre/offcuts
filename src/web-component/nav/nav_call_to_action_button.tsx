@@ -53,7 +53,7 @@ export function NavCallToActionButton(props: NavCallToActionButtonProps): React.
             cursor: "pointer",
             fontSize: "0.75em",
             fontWeight: "normal",
-            fontFamily: Constant.Theme.FONT_0,
+            fontFamily: Constant.Theme.FONT_1,
             boxShadow: Constant.Theme.SHADOW,
             background: Constant.Theme.DK_COLOR,
             color: Constant.Theme.LT_COLOR,

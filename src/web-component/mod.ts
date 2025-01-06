@@ -5,6 +5,8 @@ export * from "./cli/cli";
 export * from "./form/form_button";
 export * from "./form/form_input";
 export * from "./form/form";
+export * from "./link/link";
+export * from "./nav/nav_button_group";
 export * from "./nav/nav_button";
 export * from "./nav/nav_call_to_action_button_star";
 export * from "./nav/nav_call_to_action_button";
