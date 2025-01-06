@@ -1,6 +1,4 @@
-import { NavCallToActionButtonStar } from "@web-component";
-import * as React from "react";
-import * as Constant from "@web-constant";
+
 
 export type NavCallToActionButtonProps = {
     children: React.ReactNode;
