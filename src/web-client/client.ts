@@ -6,7 +6,13 @@ import { require } from "reliq";
 
 export type Client = {
     hasUser(): boolean;
+
+    /**
+     * NOTE Determines what category of products to show at the show-room
+     *      route.
+     */
     showRoomTagFocus(): string | null;
+    
     setShowRoomTagFocus(tag?: string): void;
     signIn(): Promise<UserData>;
     signIn(username: string, password: string): Promise<UserData>;
