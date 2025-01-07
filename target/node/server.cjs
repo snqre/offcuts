@@ -94,7 +94,8 @@ var ProductDataSchema = import_zod4.z.object({
   name: import_zod4.z.string().min(1).refine((x) => x.trim().length > 0),
   price: import_zod4.z.number().min(0).finite(),
   stock: import_zod4.z.number().min(0).finite().int(),
-  tags: import_zod4.z.array(import_zod4.z.string().min(1))
+  tags: import_zod4.z.array(import_zod4.z.string().min(1)),
+  imageUrl: import_zod4.z.string().min(1).optional()
 });
 
 // src/common/product_data.ts

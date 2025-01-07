@@ -20,6 +20,7 @@
 		"paths": {
 			"@common": ["src/common/mod"],
 			"@server": ["src/server/mod"],
+			"@web-client": ["src/web-client/client"],
 			"@web-component": ["src/web-component/mod"],
 			"@web-constant": ["src/web-constant/mod"],
 			"@web-hook": ["src/web-hook/mod"],

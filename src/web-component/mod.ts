@@ -2,6 +2,7 @@ export * from "./cli/cli_input_line";
 export * from "./cli/cli_line";
 export * from "./cli/cli_loader";
 export * from "./cli/cli";
+export * from "./content/caption_and_content_card";
 export * from "./form/form_button";
 export * from "./form/form_input";
 export * from "./form/form";
