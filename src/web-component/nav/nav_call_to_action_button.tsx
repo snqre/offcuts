@@ -1,68 +1,54 @@
+import type { ReactNode } from "react";
+import type { ComponentPropsWithRef } from "react";
+import { NavCallToActionButtonStar } from "@web-component";
+import { NavButton } from "@web-component";
+import { Link } from "@web-component";
+import { Theme } from "@web-constant";
 
-
-export type NavCallToActionButtonProps = {
-    children: React.ReactNode;
+export type NavCallToActionButtonNativeProps = {
+    to: string;
 };
 
-export function NavCallToActionButton(props: NavCallToActionButtonProps): React.ReactNode {
-    let { children } = props;
-    let wrapper$: React.ComponentPropsWithRef<"div"> = {
-        style: {
-            all: "unset",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            pointerEvents: "auto",
-            gap: 10,
-            position: "relative"
-        }
-    };
-    let leftWrapper$: React.ComponentPropsWithRef<"div"> = {
-        style: {
-            all: "unset",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "start",
-            alignItems: "center",
-            position: "absolute",
-            left: -40,
-            top: -10
-        }
-    };
-    let rightWrapper$: React.ComponentPropsWithRef<"div"> = {
-        style: {
-            all: "unset",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center"
-        }
-    };
-    let button$: React.ComponentPropsWithRef<"button"> = {
-        style: {
-            all: "unset",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            pointerEvents: "auto",
-            padding: 10,
-            cursor: "pointer",
-            fontSize: "0.75em",
-            fontWeight: "normal",
-            fontFamily: Constant.Theme.FONT_1,
-            boxShadow: Constant.Theme.SHADOW,
-            background: Constant.Theme.DK_COLOR,
-            color: Constant.Theme.LT_COLOR,
-            borderRadius: 5
-        }
-    };
+export type NavCallToActionButtonProps = 
+    & ComponentPropsWithRef<"div">
+    & NavCallToActionButtonNativeProps
+    & {};
 
-    return <>
-        <div { ... wrapper$ }>
-            <div { ... leftWrapper$ }><NavCallToActionButtonStar/></div>
-            <div { ... rightWrapper$ }><button { ... button$ }>{ children }</button></div>
-        </div>
-    </>;
+export function NavCallToActionButton(props: NavCallToActionButtonProps): ReactNode {
+    let { to, style, children, ... more } = props;
+
+    /** @constructor */ {
+        return <>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 10,
+                    position: "relative",
+                    ... style
+                }}
+                { ... more }>
+                <NavCallToActionButtonStar
+                    style={{
+                        position: "absolute",
+                        right: "100%",
+                        bottom: "100%"
+                    }}/>
+                <Link
+                    to={ to }>
+                    <NavButton
+                        style={{
+                            background: Theme.DK_COLOR
+                        }}
+                        childStyle={{
+                            color: Theme.LT_COLOR
+                        }}>
+                        { children }
+                    </NavButton>
+                </Link>
+            </div>
+        </>;
+    }
 }

@@ -30,7 +30,7 @@ export function NavTagsDropDownButton(props: NavTagsDropDownButtonProps): React.
             cursor: "pointer",
             fontSize: "1em",
             fontWeight: "normal",
-            fontFamily: Theme.FONT_0,
+            fontFamily: Theme.FONT_1,
             color: Theme.DK_COLOR
         }
     };

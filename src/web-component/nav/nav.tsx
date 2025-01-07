@@ -40,8 +40,14 @@ export function Nav(props: NavProps): React.ReactNode {
         <div { ... container$ }>
             <NavLogo/>
 
-            <NavButtonGroup>
-                <NavCallToActionButton>For You</NavCallToActionButton>
+            <NavButtonGroup
+                style={{
+                    gap: 20
+                }}>
+                <NavCallToActionButton
+                    to="/">
+                    For You
+                </NavCallToActionButton>
                 <NavTagsDropDownButton tags={["Paint", "Wallpaper"]}>Materials</NavTagsDropDownButton>
             </NavButtonGroup>
             

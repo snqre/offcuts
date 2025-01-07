@@ -5,10 +5,11 @@ import type { ComponentPropsWithRef } from "react";
 import icon from "../../web/public/icon/big_star_and_smaller_star.png";
 
 export type NavCallToActionButtonStarProps = 
-    & ComponentPropsWithRef<"div">
+    & Omit<ComponentPropsWithRef<"div">, "children">
     & {};
 
-export function NavCallToActionButtonStar(): ReactNode {
+export function NavCallToActionButtonStar(props: NavCallToActionButtonStarProps): ReactNode {
+    let { style, ... more } = props;
 
     /** @constructor */ {
         return <>
@@ -24,8 +25,10 @@ export function NavCallToActionButtonStar(): ReactNode {
                     backgroundPositionY: "center",
                     backgroundRepeat: "no-repeat",
                     width: 25,
-                    aspectRatio: 1 / 1
-                }}/>
+                    aspectRatio: 1 / 1,
+                    ... style
+                }}
+                { ... more }/>
         </>;
     }
 }

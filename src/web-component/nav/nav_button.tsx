@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
 import type { ComponentPropsWithRef } from "react";
+import type { CSSProperties as Style } from "react";
 import { Theme } from "@web-constant";
 
 export type NavButtonNativeProps = {
     icon?: string;
+    childIconStyle?: Style;
+    childStyle?: Style;
 };
 
 export type NavButtonProps =
@@ -12,7 +15,14 @@ export type NavButtonProps =
     & {};
 
 export function NavButton(props: NavButtonProps): ReactNode {
-    let { icon, style, children, ... more } = props;
+    let { 
+        icon,
+        childStyle,
+        childIconStyle,
+        style, 
+        children, 
+        ... more 
+    } = props;
 
     /** @constructor */ {
         return <>
@@ -47,7 +57,8 @@ export function NavButton(props: NavButtonProps): ReactNode {
                             backgroundSize: "contain",
                             backgroundRepeat: "no-repeat",
                             width: 15,
-                            aspectRatio: 1 / 1
+                            aspectRatio: 1 / 1,
+                            ... childIconStyle
                         }}/> :
                     undefined
                 }
@@ -58,7 +69,8 @@ export function NavButton(props: NavButtonProps): ReactNode {
                             fontSize: "0.75em",
                             fontWeight: "normal",
                             fontFamily: Theme.FONT_1,
-                            color: Theme.DK_COLOR
+                            color: Theme.DK_COLOR,
+                            ... childStyle
                         }}>
                         { children }
                     </div> :
