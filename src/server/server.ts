@@ -3,7 +3,6 @@ import { Server as HttpServer } from "http";
 import { RedisSocketAdaptor } from "@server";
 import { Redis } from "@server";
 import { Store } from "@server";
-import { AdminRouter } from "@server";
 import { ReactRouter } from "@server";
 import { StoreRouter } from "@server";
 import { require } from "reliq";
@@ -30,7 +29,6 @@ export function Server(): Server {
             .use(Express.json())
             .use(ReactRouter("/", join(__dirname, "web/app.html")))
             .use(StoreRouter(store))
-            .use(AdminRouter(store))
             .listen(port);
         console.log("SERVER.RUNNING", __dirname, port);
         return;
