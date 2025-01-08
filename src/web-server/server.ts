@@ -6,14 +6,26 @@ import { z as ZodValidator } from "zod";
 import { panic, require } from "reliq";
 
 export type Server = {
-    sortedProducts(): Promise<Map<string, Array<ProductData> | undefined>>;
     products(): Promise<Array<ProductData>>;
-    tags(): Promise<Array<string>>;
+    products(name: string): Promise<Array<ProductData>>;
+    products(
+        name?: string
+    ): Promise<Array<ProductData>>;
+    setStock(password: string, name: string, amount: bigint): Promise<void>;
+    increaseStock(password: string, name: string, amount: bigint): Promise<void>;
+    decreaseStock(password: string, name: string, amount: bigint): Promise<void>;
+    setPrice(password: string, name: string, amount: number): Promise<void>;
+    increasePrice(password: string, name: string, amount: number): Promise<void>;
+    decreasePrice(password: string, name: string, amount: number): Promise<void>;
     listProduct(password: string, product: ProductData): Promise<void>;
+    delistProduct(password: string, name: string): Promise<void>;
+    delistProduct(password: string, product: ProductData): Promise<void>;
+    delistProduct(
+        ... args: Array<unknown>
+    ): Promise<void>;
 };
 
 export const Server: Server = (() => {
-
     /** @constructor */ {
         return {
             sortedProducts,
@@ -23,17 +35,32 @@ export const Server: Server = (() => {
         };
     }
 
+    async function products(): Promise<Array<ProductData>>;
+    async function products(name: string): Promise<Array<ProductData>>;
+    async function products(
+        name?: string
+    ): Promise<Array<ProductData>> {
+        if (name) {
+            let { products } = (await Axios.get("/store/products-by-name")).data;
+            return products;
+        }
+        let { products } = (await Axios.get("/store/products")).data;
+        if (products) return products;
+        else return [];
+    }
+
+    async function setStock(password: string, name: string, amount: bigint): Promise<void> {
+        /// TODO
+    }
+
+
+
+
+
+
     async function sortedProducts(): Promise<Map<string, Array<ProductData> | undefined>> {
         let products_: Array<ProductData> = await products(); 
         return _sort(products_, _tags(products_));
-    }
-
-    async function products(): Promise<Array<ProductData>> {
-        let response: AxiosResponse = await Axios.get("/products");
-        let { products } = response.data;
-        let match: boolean = ZodValidator.array(ProductDataSchema).safeParse(products).success;
-        require(match, "SERVER.ERR_INVALID_RESPONSE");
-        return products as Array<ProductData>;
     }
 
     async function tags(): Promise<Array<string>> {
