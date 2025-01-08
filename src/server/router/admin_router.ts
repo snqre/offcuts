@@ -184,10 +184,11 @@ export function AdminRouter(_store: Store): Router {
                     require(match, "ADMIN_ROUTER.ERR_INVALID_REQUEST");
                     _checkPassword(password);
                     await _store.listProduct((product as ProductData));
-                    rs.send("ADMIN_ROUTER.OK");
+                    rs.send({ message: "OK" });
                     return;
                 }
                 catch (e) {
+                    console.error(e);
                     rs.send(e);
                     return;
                 }

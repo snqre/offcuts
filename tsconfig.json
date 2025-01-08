@@ -25,6 +25,7 @@
 			"@web-constant": ["src/web-constant/mod"],
 			"@web-hook": ["src/web-hook/mod"],
 			"@web-page": ["src/web-page/mod"],
+			"@web-server": ["src/web-server/server"],
 			"@web-util": ["src/web-util/mod"]
 		}
 	}

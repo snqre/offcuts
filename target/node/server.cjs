@@ -60,9 +60,6 @@ var AppDataSchema = import_zod2.z.object({
 
 // src/common/app_data.ts
 var import_reliq3 = require("reliq");
-function isAppData(unknown) {
-  return AppDataSchema.safeParse(unknown).success;
-}
 
 // src/common/loop.ts
 var import_reliq4 = require("reliq");
@@ -120,20 +117,23 @@ var import_reliq7 = require("reliq");
 // src/server/db/redis/redis_socket_adaptor.ts
 var import_redis = require("redis");
 var import_reliq8 = require("reliq");
-function RedisSocketAdaptor(_host, _password, _port) {
+async function RedisSocketAdaptor(_host, _password, _port) {
+  let _instance;
   {
     (0, import_reliq8.require)(_host.trim().length !== 0, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_HOST");
     (0, import_reliq8.require)(_port >= 0n, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_PORT");
     (0, import_reliq8.require)(_port <= 9e4, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_PORT");
     (0, import_reliq8.require)(_password.trim().length !== 0, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_PASSWORD");
     let n = _port;
-    return (0, import_redis.createClient)({
+    _instance = (0, import_redis.createClient)({
       password: _password,
       socket: {
         host: _host,
         port: Number(n)
       }
     });
+    await _instance.connect();
+    return _instance;
   }
 }
 
@@ -146,10 +146,10 @@ async function Redis(_socket, _key) {
   }
   async function get(...[]) {
     let response = await _socket.get(_key);
-    (0, import_reliq9.require)(response !== null, "REDIS.ERR_INVALID_RESPONSE");
-    (0, import_reliq9.require)(response !== void 0, "REDIS.ERR_INVALID_RESPONSE");
+    if (response === null || response === void 0) {
+      response = JSON.stringify(_empty());
+    }
     let data = JSON.parse(response);
-    (0, import_reliq9.require)(isAppData(data), "REDIS.ERR_INVALID_RESPONSE");
     return data;
   }
   async function set(...[data]) {
@@ -160,6 +160,13 @@ async function Redis(_socket, _key) {
   async function disconnect(...[]) {
     await _socket.quit();
     return;
+  }
+  function _empty() {
+    return {
+      admins: [],
+      users: [],
+      products: []
+    };
   }
 }
 
@@ -175,7 +182,8 @@ function Store(_db) {
       decreaseStock,
       setPrice,
       increasePrice,
-      decreasePrice
+      decreasePrice,
+      listProduct
     };
   }
   async function products(...[]) {
@@ -279,6 +287,12 @@ function Store(_db) {
     await _db.set(app);
     return;
   }
+  async function listProduct(product) {
+    let app = await _db.get();
+    app.products.push(product);
+    await _db.set(app);
+    return;
+  }
 }
 
 // src/server/payment/stripe/stripe_checkout_session_line_item.ts
@@ -373,9 +387,10 @@ function AdminRouter(_store) {
         (0, import_reliq12.require)(match, "ADMIN_ROUTER.ERR_INVALID_REQUEST");
         _checkPassword(password);
         await _store.listProduct(product);
-        rs.send("ADMIN_ROUTER.OK");
+        rs.send({ message: "OK" });
         return;
       } catch (e) {
+        console.error(e);
         rs.send(e);
         return;
       }
@@ -433,9 +448,12 @@ var import_reliq14 = require("reliq");
 function StoreRouter(_store) {
   return (0, import_express3.Router)().get("/products", async (__, rs) => {
     try {
-      rs.send(await _store.products());
+      rs.send({
+        products: await _store.products()
+      });
       return;
     } catch (e) {
+      console.error(e);
       rs.send(e);
       return;
     }
@@ -447,6 +465,7 @@ function StoreRouter(_store) {
       rs.send(await _store.productsByName(name));
       return;
     } catch (e) {
+      console.error(e);
       rs.send(e);
       return;
     }
@@ -463,7 +482,7 @@ function Server() {
   async function run(...[]) {
     let redisPassword = process.env?.["REDIS_INT_KEY"];
     (0, import_reliq15.require)(redisPassword !== void 0, "SERVER.ERR_REDIS_INT_KEY_REQUIRED");
-    let redisSocketAdaptor = RedisSocketAdaptor("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com", redisPassword, 15540n);
+    let redisSocketAdaptor = await RedisSocketAdaptor("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com", redisPassword, 15540n);
     let redis = await Redis(redisSocketAdaptor, "*");
     let store = Store(redis);
     let port = 8080;

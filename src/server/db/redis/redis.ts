@@ -18,10 +18,11 @@ export async function Redis(_socket: RedisSocketAdaptor, _key: string): Promise<
 
     async function get(... []: Parameters<Redis["get"]>): ReturnType<Redis["get"]> {
         let response: string | null = await _socket.get(_key);
-        require(response !== null, "REDIS.ERR_INVALID_RESPONSE");
-        require(response !== undefined, "REDIS.ERR_INVALID_RESPONSE");
+        if (response === null || response === undefined) {
+            response = JSON.stringify(_empty());
+        }
         let data: unknown = JSON.parse(response);
-        require(isAppData(data), "REDIS.ERR_INVALID_RESPONSE");
+        //require(isAppData(data), "REDIS.ERR_INVALID_RESPONSE");
         return (data as AppData);
     }
 
@@ -34,5 +35,13 @@ export async function Redis(_socket: RedisSocketAdaptor, _key: string): Promise<
     async function disconnect(... []: Parameters<Redis["disconnect"]>): ReturnType<Redis["disconnect"]> {
         await _socket.quit();
         return;
+    }
+
+    function _empty(): AppData {
+        return {
+            admins: [],
+            users: [],
+            products: []
+        };
     }
 }

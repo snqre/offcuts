@@ -6,10 +6,13 @@ export function StoreRouter(_store: Store): Router {
     return Router()
         .get("/products", async (__, rs) => {
             try {
-                rs.send((await _store.products()));
+                rs.send({
+                    products: await _store.products()
+                });
                 return;
             }
             catch (e) {
+                console.error(e);
                 rs.send(e);
                 return;
             }
@@ -27,6 +30,7 @@ export function StoreRouter(_store: Store): Router {
                 return;
             }
             catch (e) {
+                console.error(e);
                 rs.send(e);
                 return;
             }

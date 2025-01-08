@@ -5,7 +5,10 @@ import { require } from "reliq";
 
 export type Store = {
     products(): Promise<Array<ProductData>>;
-    productsByName(name: string): Promise<Array<ProductData>>;
+    products(name: string): Promise<Array<ProductData>>;
+    products(
+        name?: string
+    ): Promise<Array<ProductData>>;
     setStock(name: string, amount: bigint): Promise<void>;
     increaseStock(name: string, amount: bigint): Promise<void>;
     decreaseStock(name: string, amount: bigint): Promise<void>;
@@ -14,10 +17,55 @@ export type Store = {
     decreasePrice(name: string, amount: number): Promise<void>;
     listProduct(product: ProductData): Promise<void>;
     deListProduct(name: string): Promise<void>;
-    deListProductByProduct(product: ProductData): Promise<void>;
+    deListProduct(product: ProductData): Promise<void>;
+    deListProduct(
+        args: string | ProductData
+    ): Promise<void>;
 };
 
 export function Store(_db: Database): Store {
+    
+    /** @constructor */ {
+        return { products };
+    }
+
+    async function products(): Promise<Array<ProductData>>;
+    async function products(name: string): Promise<Array<ProductData>>;
+    async function products(
+        name?: string
+    ): Promise<Array<ProductData>> {
+        let app: AppData = await _db.get();
+        if (name) {
+            let result: Array<ProductData> = [];
+            let i: bigint = 0n;
+            while (i < app.products.length) {
+                let product: ProductData = app.products[Number(i)];
+                if (product.name === name) result.push(product);
+                i++
+            }
+            return result;
+        }
+        return app.products;
+    }
+
+    async function setStock(name: string, amount: bigint): Promise<void> {
+        require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+        require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+        let app: AppData = await _db.get();
+        let i: bigint = 0n;
+        while (i < app.products.length) {
+            let product: ProductData = app.products[Number(i)];
+            if (product.name === name) product.stock = Number(amount);
+            i++;
+        }
+        await _db.set(app);
+        return;
+    }
+}
+
+
+
+export function Stores(_db: Database): Store {
     /** @constructor */ {
         return {
             products, 
@@ -27,7 +75,8 @@ export function Store(_db: Database): Store {
             decreaseStock,
             setPrice,
             increasePrice,
-            decreasePrice
+            decreasePrice,
+            listProduct
         };
     }
 
@@ -136,6 +185,13 @@ export function Store(_db: Database): Store {
             }
             i++;
         }
+        await _db.set(app);
+        return;
+    }
+
+    async function listProduct(product: ProductData): Promise<void> {
+        let app: AppData = await _db.get();
+        app.products.push(product);
         await _db.set(app);
         return;
     }

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import type { ComponentPropsWithRef } from "react";
 import { NavButton } from "@web-component";
 import { NavCallToActionButton } from "@web-component";
 import { NavLogo } from "@web-component";
@@ -8,69 +10,77 @@ import { NavSignInSignUpButton } from "@web-component";
 import { NavSignInForm } from "@web-component";
 import { NavSignUpForm } from "@web-component";
 import { Link } from "@web-component";
-import { useTags } from "@web-hook";
-import * as React from "react";
-
-// @ts-ignore
-import basketIcon from "../../web/public/icon/shopping_bag.png";
+import { Server } from "@web-server";
+import { useState } from "react";
+import { useEffect } from "react";
 
 // @ts-ignore
 import adminIcon from "../../web/public/icon/admin.png";
 
-export type NavProps = {
-    categories: Array<React.ReactNode>;
-};
+export type NavProps = Omit<ComponentPropsWithRef<"div">, "children">;
 
 export function Nav(props: NavProps): React.ReactNode {
-    let tags: Array<string> = useTags();
-    let container$: React.ComponentPropsWithRef<"div"> = {
-        style: {
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            paddingTop: 30,
-            paddingBottom: 30,
-            gap: 40
-        }
-    };
+    let { style, ... more } = props;
+    let [tags, setTags] = useState<Array<string>>();
 
-    return <>
-        <div { ... container$ }>
-            <NavLogo/>
+    useEffect(() => {
+        (async () => {
+            setTags((await Server.tags()));
+            return;
+        })();
+        return;
+    }, []);
 
-            <NavButtonGroup
+    /** @constructor */ {
+        return <>
+            <div
                 style={{
-                    gap: 20
-                }}>
-                <NavCallToActionButton
-                    to="/">
-                    For You
-                </NavCallToActionButton>
-                <NavTagsDropDownButton tags={["Paint", "Wallpaper"]}>Materials</NavTagsDropDownButton>
-            </NavButtonGroup>
-            
-
-            <NavSearchBar/>
-
-            <NavButtonGroup>
-                <Link
-                    to={ "/basket" }>
-                    <NavButton>
-                        Basket
-                    </NavButton>
-                </Link>
-                <NavSignInSignUpButton
-                    signUpForm={ <NavSignUpForm/> }
-                    signInForm={ <NavSignInForm/> }/>
-                <Link
-                    to={ "/admin" }>
-                    <NavButton
-                        icon={ adminIcon }>
-                    </NavButton>
-                </Link>
-            </NavButtonGroup>
-        </div>
-    </>;
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "auto",
+                    flex: 1,
+                    paddingTop: 30,
+                    paddingBottom: 30,
+                    gap: 40,
+                    ... style
+                }}
+                { ... more }>
+                <NavLogo/>
+                <NavButtonGroup>
+                    <NavCallToActionButton
+                        to="/">
+                        For You
+                    </NavCallToActionButton>
+                    <NavTagsDropDownButton
+                        tags={ tags ?? [] }>
+                        Materials
+                    </NavTagsDropDownButton>
+                </NavButtonGroup>
+                <NavSearchBar/>
+                <NavButtonGroup>
+                    <Link
+                        to="/basket">
+                        <NavButton>
+                            Basket
+                        </NavButton>
+                    </Link>
+                    <NavSignInSignUpButton
+                        signUpForm={
+                            <NavSignUpForm/>
+                        }
+                        signInForm={
+                            <NavSignInForm/>
+                        }/>
+                    <Link
+                        to="/admin">
+                        <NavButton 
+                            icon={ adminIcon }/>
+                    </Link>
+                </NavButtonGroup>
+            </div>
+        </>;
+    }
 }

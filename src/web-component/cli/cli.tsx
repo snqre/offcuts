@@ -67,7 +67,7 @@ export function Cli(props: CliProps): ReactNode {
                                         flex: 1,
                                         fontSize: "0.75em",
                                         fontWeight: "normal",
-                                        fontFamily: "monospace"
+                                        fontFamily: Theme.MONOSPACE_FONT
                                     }}>
                                     { line }
                                 </div>
@@ -86,7 +86,7 @@ export function Cli(props: CliProps): ReactNode {
                             flex: 1,
                             fontSize: "0.75em",
                             fontWeight: "normal",
-                            fontFamily: "monospace"
+                            fontFamily: Theme.MONOSPACE_FONT
                         }}
                         type="text"
                         value={ input }

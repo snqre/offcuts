@@ -21,7 +21,7 @@ export function Server(): Server {
     async function run(... []: Parameters<Server["run"]>): ReturnType<Server["run"]> {
         let redisPassword: string | undefined = process.env?.["REDIS_INT_KEY"];
         require(redisPassword !== undefined, "SERVER.ERR_REDIS_INT_KEY_REQUIRED");
-        let redisSocketAdaptor: RedisSocketAdaptor = RedisSocketAdaptor("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com", redisPassword, 15540n);
+        let redisSocketAdaptor: RedisSocketAdaptor = await RedisSocketAdaptor("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com", redisPassword, 15540n);
         let redis: Redis = await Redis(redisSocketAdaptor, "*");
         let store: Store = Store(redis);
         let port: number = 8080;
