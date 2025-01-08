@@ -12,13 +12,13 @@ export type Store = {
     setStock(name: string, amount: bigint): Promise<void>;
     increaseStock(name: string, amount: bigint): Promise<void>;
     decreaseStock(name: string, amount: bigint): Promise<void>;
-    setPrice(name: string, price: number): Promise<void>;
+    setPrice(name: string, amount: number): Promise<void>;
     increasePrice(name: string, amount: number): Promise<void>;
     decreasePrice(name: string, amount: number): Promise<void>;
     listProduct(product: ProductData): Promise<void>;
-    deListProduct(name: string): Promise<void>;
-    deListProduct(product: ProductData): Promise<void>;
-    deListProduct(
+    delistProduct(name: string): Promise<void>;
+    delistProduct(product: ProductData): Promise<void>;
+    delistProduct(
         args: string | ProductData
     ): Promise<void>;
 };
@@ -26,7 +26,17 @@ export type Store = {
 export function Store(_db: Database): Store {
     
     /** @constructor */ {
-        return { products };
+        return { 
+            products, 
+            setStock, 
+            increaseStock, 
+            decreaseStock,
+            setPrice,
+            increasePrice,
+            decreasePrice,
+            listProduct,
+            delistProduct
+        };
     }
 
     async function products(): Promise<Array<ProductData>>;
@@ -50,55 +60,7 @@ export function Store(_db: Database): Store {
 
     async function setStock(name: string, amount: bigint): Promise<void> {
         require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
-        require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
-        let app: AppData = await _db.get();
-        let i: bigint = 0n;
-        while (i < app.products.length) {
-            let product: ProductData = app.products[Number(i)];
-            if (product.name === name) product.stock = Number(amount);
-            i++;
-        }
-        await _db.set(app);
-        return;
-    }
-}
-
-
-
-export function Stores(_db: Database): Store {
-    /** @constructor */ {
-        return {
-            products, 
-            productsByName, 
-            setStock, 
-            increaseStock,
-            decreaseStock,
-            setPrice,
-            increasePrice,
-            decreasePrice,
-            listProduct
-        };
-    }
-
-    async function products(... []: Parameters<Store["products"]>): ReturnType<Store["products"]> {
-        return (await _db.get()).products;
-    }
-
-    async function productsByName(... [name]: Parameters<Store["productsByName"]>): ReturnType<Store["productsByName"]> {
-        let app: AppData = await _db.get();
-        let result: Array<ProductData> = [];
-        let i: bigint = 0n;
-        while (i < app.products.length) {
-            let product: ProductData = app.products[Number(i)];
-            if (product.name === name) result.push(product);
-            i++;
-        }
-        return result;
-    }
-
-    async function setStock(... [name, amount]: Parameters<Store["setStock"]>): ReturnType<Store["setStock"]> {
-        require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
-        require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+        require(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
         let app: AppData = await _db.get();
         let i: bigint = 0n;
         while (i < app.products.length) {
@@ -110,7 +72,7 @@ export function Stores(_db: Database): Store {
         return;
     }
 
-    async function increaseStock(... [name, amount]: Parameters<Store["increaseStock"]>): ReturnType<Store["increaseStock"]> {
+    async function increaseStock(name: string, amount: bigint): Promise<void> {
         require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
         require(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
         let app: AppData = await _db.get();
@@ -124,7 +86,7 @@ export function Stores(_db: Database): Store {
         return;
     }
 
-    async function decreaseStock(... [name, amount]: Parameters<Store["decreaseStock"]>): ReturnType<Store["decreaseStock"]> {
+    async function decreaseStock(name: string, amount: bigint): Promise<void> {
         require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
         require(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
         let app: AppData = await _db.get();
@@ -141,22 +103,7 @@ export function Stores(_db: Database): Store {
         return;
     }
 
-    async function setPrice(... [name, price]: Parameters<Store["setPrice"]>): ReturnType<Store["setPrice"]> {
-        require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
-        require(price >= 0, "STORE.ERR_PRICE_BELOW_ZERO");
-        require(price <= Number.MAX_SAFE_INTEGER, "STORE.ERR_PRICE_ABOVE_MAX_SAFE_INTEGER");
-        let app: AppData = await _db.get();
-        let i: bigint = 0n;
-        while (i <  app.products.length) {
-            let product: ProductData = app.products[Number(i)];
-            if (product.name === name) product.stock = price;
-            i++;
-        }
-        await _db.set(app);
-        return;
-    }
-
-    async function increasePrice(... [name, amount]: Parameters<Store["increasePrice"]>): ReturnType<Store["increasePrice"]> {
+    async function setPrice(name: string, amount: number): Promise<void> {
         require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
         require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
         require(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
@@ -164,14 +111,32 @@ export function Stores(_db: Database): Store {
         let i: bigint = 0n;
         while (i < app.products.length) {
             let product: ProductData = app.products[Number(i)];
-            if (product.name === name) product.price += amount;
+            if (product.name === name) product.stock = amount;
             i++;
         }
         await _db.set(app);
         return;
     }
 
-    async function decreasePrice(... [name, amount]: Parameters<Store["decreasePrice"]>): ReturnType<Store["decreasePrice"]> {
+    async function increasePrice(name: string, amount: number): Promise<void> {
+        require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+        require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+        require(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+        let app: AppData = await _db.get();
+        let i: bigint = 0n;
+        while (i < app.products.length) {
+            let product: ProductData = app.products[Number(i)];
+            if (product.name === name) {
+                require(product.price + amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_PRICE_ABOVE_MAX_SAFE_INTEGER");
+                product.price += amount;
+            }
+            i++;
+        }
+        await _db.set(app);
+        return;
+    }
+
+    async function decreasePrice(name: string, amount: number): Promise<void> {
         require(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
         require(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
         require(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
@@ -193,6 +158,24 @@ export function Stores(_db: Database): Store {
         let app: AppData = await _db.get();
         app.products.push(product);
         await _db.set(app);
+        return;
+    }
+
+    async function delistProduct(name: string): Promise<void>;
+    async function delistProduct(product: ProductData): Promise<void>;
+    async function delistProduct(
+        args: string | ProductData
+    ): Promise<void> {
+        let name: string;
+        if (typeof args === "string") name = args;
+        else name = args.name;
+        let app: AppData = await _db.get();
+        let i: bigint = 0n;
+        while (i < app.products.length) {
+            let product: ProductData = app.products[Number(i)];
+            if (product.name === name) app.products.splice(Number(i), 1);
+            i++;
+        }
         return;
     }
 }
