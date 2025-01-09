@@ -1,16 +1,14 @@
-import type { AxiosResponse } from "axios";
 import { default as Axios } from "axios";
 import { ProductDataSchema } from "@common";
 import { ProductData } from "@common";
 import { z as ZodValidator } from "zod";
-import { panic, require } from "reliq";
+import { panic } from "reliq";
 
 export type Server = {
+    tags(): Promise<Array<string>>;
+    sortedProducts(): Promise<Map<string, Array<ProductData> | undefined>>;
     products(): Promise<Array<ProductData>>;
     products(name: string): Promise<Array<ProductData>>;
-    products(
-        name?: string
-    ): Promise<Array<ProductData>>;
     setStock(password: string, name: string, amount: bigint): Promise<void>;
     increaseStock(password: string, name: string, amount: bigint): Promise<void>;
     decreaseStock(password: string, name: string, amount: bigint): Promise<void>;
@@ -20,19 +18,31 @@ export type Server = {
     listProduct(password: string, product: ProductData): Promise<void>;
     delistProduct(password: string, name: string): Promise<void>;
     delistProduct(password: string, product: ProductData): Promise<void>;
-    delistProduct(
-        ... args: Array<unknown>
-    ): Promise<void>;
 };
 
 export const Server: Server = (() => {
     /** @constructor */ {
         return {
+            tags,
             sortedProducts,
             products,
-            tags,
-            listProduct
+            setStock,
+            increaseStock,
+            decreaseStock,
+            setPrice,
+            increasePrice,
+            decreasePrice,
+            listProduct,
+            delistProduct
         };
+    }
+
+    async function tags(): Promise<Array<string>> {
+        return _tags((await products()));
+    }
+
+    async function sortedProducts(): Promise<Map<string, Array<ProductData> | undefined>> {
+        return _sort((await products()), (await tags()));
     }
 
     async function products(): Promise<Array<ProductData>>;
@@ -41,41 +51,126 @@ export const Server: Server = (() => {
         name?: string
     ): Promise<Array<ProductData>> {
         if (name) {
-            let { products } = (await Axios.get("/store/products-by-name")).data;
-            return products;
+            let response: unknown = (await Axios.get("/store/products-by-name")).data;
+            let payload = ZodValidator.object({
+                products: ZodValidator.array(ProductDataSchema)
+            }).parse(response);
+            if (payload.products) return payload.products;
+            else return [];
         }
-        let { products } = (await Axios.get("/store/products")).data;
-        if (products) return products;
+        let response: unknown = (await Axios.get("/store/products")).data;
+        let payload = ZodValidator.object({
+            products: ZodValidator.array(ProductDataSchema)
+        }).parse(response);
+        if (payload.products) return payload.products;
         else return [];
     }
 
     async function setStock(password: string, name: string, amount: bigint): Promise<void> {
-        /// TODO
+        let n: number = Number(amount);
+        let response: unknown = (await Axios.post("/store/set-stock", { password, name, amount: n })).data;
+        let parsed = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = parsed;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
     }
 
-
-
-
-
-
-    async function sortedProducts(): Promise<Map<string, Array<ProductData> | undefined>> {
-        let products_: Array<ProductData> = await products(); 
-        return _sort(products_, _tags(products_));
+    async function increaseStock(password: string, name: string, amount: bigint): Promise<void> {
+        let n: number = Number(amount);
+        let response: unknown = (await Axios.post("/store/increase-stock", { password, name, amount: n })).data;
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
     }
 
-    async function tags(): Promise<Array<string>> {
-        return _tags((await products()));
+    async function decreaseStock(password: string, name: string, amount: bigint): Promise<void> {
+        let n: number = Number(amount);
+        let response: unknown = (await Axios.post("/store/decrease-stock", { password, name, amount: n })).data;
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
+    }
+
+    async function setPrice(password: string, name: string, amount: number): Promise<void> {
+        let response: unknown = (await Axios.post("/store/set-price", { password, name, amount }));
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
+    }
+
+    async function increasePrice(password: string, name: string, amount: number): Promise<void> {
+        let response: unknown = (await Axios.post("/store/increase-price", { password, name, amount }));
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
+    }
+
+    async function decreasePrice(password: string, name: string, amount: number): Promise<void> {
+        let response: unknown = (await Axios.post("/store/increase-price", { password, name, amount }));
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
     }
 
     async function listProduct(password: string, product: ProductData): Promise<void> {
-        let response: AxiosResponse = await Axios.post("/store/list-product", { password, product });
-        let { message } = response.data;
-        if (!(
-            message !== null
-            && message !== undefined
-            && typeof message === "string"
-        )) panic("SERVER.ERR_INVALID_RESPONSE");
-        require(message === "OK", "SERVER.ERR_OP_FAILURE");
+        let response: unknown = (await Axios.post("/store/increase-price", { password, product }));
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
+        return;
+    }
+
+    async function delistProduct(password: string, name: string): Promise<void>;
+    async function delistProduct(password: string, product: ProductData): Promise<void>;
+    async function delistProduct(
+        x0: string,
+        x1: string | ProductData
+    ): Promise<void> {
+        let password: string = x0;
+        let name: string;
+        if (typeof x1 === "object") name = x1.name;
+        else name = x1;
+        let response: unknown = (await Axios.post("/store/delist-product-by-name", { password, name }));
+        let payload = ZodValidator.object({
+            message: ZodValidator.string().optional(),
+            e: ZodValidator.unknown().optional()
+        }).parse(response);
+        let { message, e } = payload;
+        if (e) panic(String(e));
+        if (message && message !== "OK") panic(message);
         return;
     }
 
