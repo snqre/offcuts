@@ -1,4 +1,5 @@
 import { UserData } from "@common";
+import { ClientProduct } from "@web-client";
 import { ClientShoppingCart } from "@web-client";
 import { ClientShowRoomTag } from "@web-client";
 import { ClientUserDriver } from "@web-client";
@@ -7,8 +8,10 @@ export type Client = {
     cached(): boolean;
     cache(): UserData | null;
     tagFocus(): string | null;
+    productFocus(): string | null;
     shoppingCartCost(): number;
     setTagFocus(tag: string): void;
+    setProductFocus(name: string): Promise<void>;
     addProductToShoppingCart(name: string): Promise<void>;
     addProductToShoppingCart(name: string, amount: bigint): Promise<void>;
     removeProductFromShoppingCart(name: string): void;
@@ -18,14 +21,16 @@ export type Client = {
     signUp(user: UserData): Promise<void>;
 };
 
-export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomTag, _user: ClientUserDriver) => {
+export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomTag, _product: ClientProduct, _user: ClientUserDriver) => {
     /** @constructor */ {
         return {
             cached,
             cache,
             tagFocus,
+            productFocus,
             shoppingCartCost,
             setTagFocus,
+            setProductFocus,
             addProductToShoppingCart,
             removeProductFromShoppingCart,
             signIn,
@@ -45,12 +50,20 @@ export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomT
         return _tag.get();
     }
 
+    function productFocus(): string | null {
+        return _product.get();
+    }
+
     function shoppingCartCost(): number {
         return _cart.cost();
     }
 
     function setTagFocus(tag: string): void {
         return _tag.set(tag);
+    }
+
+    async function setProductFocus(name: string): Promise<void> {
+        return await _product.set(name);
     }
 
     async function addProductToShoppingCart(name: string): Promise<void>;
@@ -86,4 +99,4 @@ export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomT
     async function signUp(user: UserData): Promise<void> {
         return await _user.signUp(user);
     }
-})(ClientShoppingCart(), ClientShowRoomTag(null), ClientUserDriver());
+})(ClientShoppingCart(), ClientShowRoomTag(null), ClientProduct(null), ClientUserDriver());
