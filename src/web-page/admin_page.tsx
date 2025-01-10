@@ -35,9 +35,66 @@ export function AdminPage(): ReactNode {
                     execute={
                         async args => {
                             args.shift();
-                            if (args[0] === "poke") {
-                                return "Hello World";
+                            
+                            /** @command */
+                            if (args[0] === "tags" && args[1] === "->") {
+                                try {
+                                    let tag: string = args[2];
+                                    let map: Map<string, Array<ProductData> | undefined> = await Server.sortedProducts();
+                                    let products: Array<ProductData> | undefined = map.get(tag);
+                                    if (products === undefined) return `No products with ${ tag } tag were found.`;
+                                    let result: string = "";
+                                    let i: bigint = 0n;
+                                    while (i < products.length) {
+                                        let product: ProductData | undefined = products[Number(i)];
+                                        if (product) {
+                                            result += toString(product);
+                                        }
+                                        i++;
+                                    }
+                                    return result; 
+                                }
+                                catch (e) {
+                                    return toString(e);
+                                }
                             }
+
+                            /** @command */
+                            else if (args[0] === "tags") {
+                                try {
+                                    return toString((await Server.tags()));
+                                }
+                                catch (e) {
+                                    return toString(e);
+                                }
+                            }
+
+                            /** @command */
+                            else if (args[0] === "products") {
+                                try {
+                                    return toString((await Server.products()));
+                                        
+                                }
+                                catch (e) {
+                                    return toString(e);
+                                }
+                            }
+
+                            /** @command */
+                            else if (args[0] === "set-stock") {
+                                try {
+                                    let password: string = args[1];
+                                    let name: string = args[2];
+                                    let amount: bigint = BigInt(args[3]);
+                                    await Server.setStock(password, name, amount);
+                                    return "OK"; 
+                                }
+                                catch (e) {
+                                    return toString(e);
+                                }
+                            }
+
+
                             else if (args[0] === "list-product") {
                                 try {
                                     let passwordInput: string = args[1];
@@ -58,14 +115,6 @@ export function AdminPage(): ReactNode {
                                     });
                                     await Server.listProduct(password, product);
                                     return "PRODUCT_LISTED_OK"
-                                }
-                                catch (e) {
-                                    return String(e);
-                                }
-                            }
-                            else if (args[0] === "products") {
-                                try {
-                                    return toString((await Server.products()));
                                 }
                                 catch (e) {
                                     return String(e);

@@ -1,84 +1,89 @@
-import type { AxiosResponse } from "axios";
-import { default as Axios } from "axios";
-import { UserDataSchema } from "@common";
 import { UserData } from "@common";
-import { require } from "reliq";
+import { ClientShoppingCart } from "@web-client";
+import { ClientShowRoomTag } from "@web-client";
+import { ClientUserDriver } from "@web-client";
 
 export type Client = {
-    hasUser(): boolean;
-
-    /**
-     * NOTE Determines what category of products to show at the show-room
-     *      route.
-     */
-    showRoomTagFocus(): string | null;
-    
-    setShowRoomTagFocus(tag?: string): void;
+    cached(): boolean;
+    cache(): UserData | null;
+    tagFocus(): string | null;
+    shoppingCartCost(): number;
+    setTagFocus(tag: string): void;
+    addProductToShoppingCart(name: string): Promise<void>;
+    addProductToShoppingCart(name: string, amount: bigint): Promise<void>;
+    removeProductFromShoppingCart(name: string): void;
+    removeProductFromShoppingCart(name: string, amount: bigint): void;
     signIn(): Promise<UserData>;
     signIn(username: string, password: string): Promise<UserData>;
     signUp(user: UserData): Promise<void>;
 };
 
-export const Client: Client = (() => {
-    let _showRoomTagFocus: string | null;
-    let _user: UserData | null;
-    let _username: string | null;
-    let _password: string | null;
-    
+export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomTag, _user: ClientUserDriver) => {
     /** @constructor */ {
-        _showRoomTagFocus = null;
-        _user = null;
-        _username = null;
-        _password = null;
         return {
-            hasUser,
-            showRoomTagFocus,
-            setShowRoomTagFocus,
+            cached,
+            cache,
+            tagFocus,
+            shoppingCartCost,
+            setTagFocus,
+            addProductToShoppingCart,
+            removeProductFromShoppingCart,
             signIn,
             signUp
         };
     }
 
-    function hasUser(): boolean {
-        if (_user === null) return false;
-        return true;
+    function cached(): boolean {
+        return !_user.empty();
     }
 
-    function showRoomTagFocus(): string | null {
-        return _showRoomTagFocus;
+    function cache(): UserData | null {
+        return _user.cache();
     }
 
-    function setShowRoomTagFocus(tag?: string): void {
-        _showRoomTagFocus = tag ?? null;
-        return;
+    function tagFocus(): string | null {
+        return _tag.get();
+    }
+
+    function shoppingCartCost(): number {
+        return _cart.cost();
+    }
+
+    function setTagFocus(tag: string): void {
+        return _tag.set(tag);
+    }
+
+    async function addProductToShoppingCart(name: string): Promise<void>;
+    async function addProductToShoppingCart(name: string, amount: bigint): Promise<void>;
+    async function addProductToShoppingCart(
+        args0: string,
+        args1?: bigint
+    ): Promise<void> {
+        if (args1) return await _cart.addProduct(args0, args1);
+        else return await _cart.addProduct(args0);
+    }
+
+    function removeProductFromShoppingCart(name: string): void;
+    function removeProductFromShoppingCart(name: string, amount: bigint): void;
+    function removeProductFromShoppingCart(
+        args0: string,
+        args1?: bigint
+    ): void {
+        if (args1) return _cart.removeProduct(args0, args1);
+        else return _cart.removeProduct(args0);
     }
 
     async function signIn(): Promise<UserData>;
     async function signIn(username: string, password: string): Promise<UserData>;
-    async function signIn(username?: string, password?: string): Promise<UserData> {
-        if (username === undefined || password === undefined) {
-            require(_username !== null && _password !== null, "CLIENT.ERR_NOT_SIGNED_IN");
-            username = _username;
-            password = _password;
-        }
-        return _signIn(username, password);
+    async function signIn(
+        args0?: string,
+        args1?: string
+    ): Promise<UserData> {
+        if (args0 && args1) return await _user.signIn(args0, args1);
+        else return await _user.signIn();
     }
 
     async function signUp(user: UserData): Promise<void> {
-        let response: AxiosResponse = await Axios.post("/sign-up", { user });
-        let { result } = response.data;
-        require(typeof result === "string", "CLIENT.ERR_INVALID_RESPONSE");
-        require(result === "OK", result);
-        return;
+        return await _user.signUp(user);
     }
-
-    async function _signIn(username: string, password: string): Promise<UserData> {
-        let response: AxiosResponse = await Axios.post("/sign-in", { username, password });
-        let { user } = response.data;
-        UserDataSchema.parse(user);
-        _user = user;
-        _username = username;
-        _password = password;
-        return user as UserData;
-    }
-})();
+})(ClientShoppingCart(), ClientShowRoomTag(null), ClientUserDriver());

@@ -71,7 +71,7 @@ export function NavTagsDropDownButton({
                             tags.map(tag =>
                                 <Link
                                     onClick={
-                                        () => Client.setShowRoomTagFocus(tag)
+                                        () => Client.setTagFocus(tag)
                                     }
                                     to={ "/show-room" }>
                                     <div

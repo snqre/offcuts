@@ -98,8 +98,8 @@ export function Cli(props: CliProps): ReactNode {
                                     setInput("@admin ");
                                     setLast(last => [... last, command]);
                                     execute((command.split(" ")))
-                                        .then(response => response ? setLast(last => [... last, `@offcuts: ${ response }`]) : undefined)
-                                        .catch(e => [... last, `offcuts: ${ e }`]);
+                                        .then(response => response ? setLast(last => [... last, `${ response }`]) : undefined)
+                                        .catch(e => [... last, `${ e }`]);
                                     return;
                                 }
                                 return;

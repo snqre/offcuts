@@ -5,6 +5,7 @@ import { z as ZodValidator } from "zod";
 import { panic } from "reliq";
 
 export type Server = {
+    hasProduct(name: string): Promise<boolean>;
     tags(): Promise<Array<string>>;
     sortedProducts(): Promise<Map<string, Array<ProductData> | undefined>>;
     products(): Promise<Array<ProductData>>;
@@ -23,6 +24,7 @@ export type Server = {
 export const Server: Server = (() => {
     /** @constructor */ {
         return {
+            hasProduct,
             tags,
             sortedProducts,
             products,
@@ -35,6 +37,17 @@ export const Server: Server = (() => {
             listProduct,
             delistProduct
         };
+    }
+
+    async function hasProduct(name: string): Promise<boolean> {
+        let products_: Array<ProductData> = await products();
+        let i: bigint = 0n;
+        while (i < products_.length) {
+            let product: ProductData = products_.at(Number(i))!;
+            if (product.name === name) return true;
+            i ++;
+        }
+        return false;
     }
 
     async function tags(): Promise<Array<string>> {

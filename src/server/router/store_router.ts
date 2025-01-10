@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Store } from "@server";
 import { ProductDataSchema } from "@common";
+import { z as ZodValidator } from "zod";
 import { require } from "reliq";
 
 export function StoreRouter(_store: Store): Router {
@@ -39,25 +40,12 @@ export function StoreRouter(_store: Store): Router {
         })
         .post("/store/set-stock", async (rq, rs) => {
             try {
-                let { password, name, amount } = rq.body;
-                if (!(
-                    password !== null
-                    && password !== undefined
-                    && typeof password === "string"
-                    && _hasPermission(password)
-                    && name !== null
-                    && name !== undefined
-                    && typeof name === "string"
-                    && amount !== null
-                    && amount !== undefined
-                    && typeof amount === "number"
-                    && amount >= 0
-                    && amount <= Number.MAX_SAFE_INTEGER
-                    && Number.isSafeInteger(amount)
-                )) {
-                    rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST "});
-                    return;
-                }
+                let payload = ZodValidator.object({
+                    password: ZodValidator.string().refine(v => _hasPermission(v)),
+                    name: ZodValidator.string(),
+                    amount: ZodValidator.number()
+                }).parse(rq.body);
+                let { name, amount } = payload;
                 await _store.setStock(name, BigInt(amount));
                 rs.send({ message: "OK" });
                 return;
@@ -70,25 +58,12 @@ export function StoreRouter(_store: Store): Router {
         })
         .post("/store/increase-stock", async (rq, rs) => {
             try {
-                let { password, name, amount } = rq.body;
-                if (!(
-                    password !== null
-                    && password !== undefined
-                    && typeof password === "string"
-                    && _hasPermission(password)
-                    && name !== null
-                    && name !== undefined
-                    && typeof name === "string"
-                    && amount !== null
-                    && amount !== undefined
-                    && typeof amount === "number"
-                    && amount >= 0
-                    && amount <= Number.MAX_SAFE_INTEGER
-                    && Number.isSafeInteger(amount)
-                )) {
-                    rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
-                    return;
-                }
+                let payload = ZodValidator.object({
+                    password: ZodValidator.string().refine(v => _hasPermission(v)),
+                    name: ZodValidator.string(),
+                    amount: ZodValidator.number()
+                }).parse(rq.body);
+                let { name, amount } = payload;
                 await _store.increaseStock(name, BigInt(amount));
                 rs.send({ message: "OK" });
                 return;
@@ -296,11 +271,11 @@ export function StoreRouter(_store: Store): Router {
         });
     }
 
-    function _hasPermission(password: string): void {
+    function _hasPermission(password: string): boolean {
         let correctPassword: string | undefined = process.env?.["ADMIN_PASSWORD"];
-        require(correctPassword !== undefined, "ADMIN_ROUTER.ERR_ADMIN_PASSWORD_REQUIRED");
-        require(correctPassword.trim().length !== 0, "ADMIN_ROUTER.ERR_INVALID_ADMIN_PASSWORD");
-        require(correctPassword === password, "ADMIN_ROUTER.ERR_INCORRECT_PASSWORD");
-        return;
+        if (correctPassword === undefined) return false;
+        if (correctPassword.trim().length === 0) return false;
+        if (correctPassword === password) return true;
+        return false;
     }
 }
