@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import { ResponsiveAnchorPage } from "@web-component";
 import { Table } from "@web-component";
+import { TableItem } from "@web-component";
+import { SymbolButton } from "@web-component";
+import { Client } from "@web-client";
 import { Theme } from "@web-constant";
 
 export function BasketPage(): ReactNode {
@@ -26,18 +29,44 @@ export function BasketPage(): ReactNode {
                         overflowY: "auto"
                     }}>
                     <Table
-                        caption={ "Checkout" }
-                        headings={ ["Product", "Price", "Amount"] }
-                        contents={
-                            [
-                                ["Wallpaper", "£69.43", "12"],
-                                ["Paint", "£30.00", "2"]
-                            ]
-                        }
                         style={{
-                            width: 400,
+                            width: 600,
                             height: "100%"
-                        }}/>
+                        }}
+                        caption={
+                            "Checkout"
+                        }
+                        headings={
+                            ["Product", "Price", "Amount", "Edit"]
+                        }
+                        contents={
+                            [...Client.shoppingCartOrders().map(order => {
+                                return [
+                                    order.product.name,
+                                    order.product.price,
+                                    order.product.stock,
+                                    <>
+                                        <TableItem
+                                            style={{
+                                                gap: 10
+                                            }}>
+                                            <SymbolButton
+                                                onClick={
+                                                    () => Client.removeProductFromShoppingCart(order.product.name)
+                                                }>
+                                                -
+                                            </SymbolButton>
+                                            <SymbolButton
+                                                onClick={
+                                                    () => Client.addProductToShoppingCart(order.product.name)
+                                                }>
+                                                +
+                                            </SymbolButton>
+                                        </TableItem>
+                                    </>
+                                ]
+                            })]
+                        }/>
                 </div>
             </div>
         </ResponsiveAnchorPage>

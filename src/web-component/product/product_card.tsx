@@ -1,67 +1,143 @@
-import type { ReactNode } from "react";
-import type { CardProps } from "@web-component";
-import type { CSSProperties as Style } from "react";
-import { Card } from "@web-component";
+import { type ReactNode } from "react";
+import { type CardProps } from "@web-component";
+import { SymbolButton } from "@web-component";
+import { Link } from "@web-component";
 import { ProductData } from "@common";
+import { Card } from "@web-component";
+import { Client } from "@web-client";
 import { Theme } from "@web-constant";
 
-export type ProductCardNativeProps = {
-    childCaption: ReactNode;
-    childImage: ReactNode;
-    childPrice: ReactNode;
-    childStock: ReactNode;
-    childDescription: ReactNode;
-};
+// @ts-ignore
+import placeholderImage from "../../web/public/img/placeholder_product.jpg";
 
 export type ProductCardProps = 
     & Omit<CardProps, "children"> 
-    & ProductCardNativeProps;
+    & {
+    product: ProductData;
+};
 
 export function ProductCard(props: ProductCardProps): ReactNode {
     let { 
-        childCaption,
-        childImage,
-        childPrice,
-        childStock,
-        childDescription, 
-        style, ... more } = props;
+        product,
+        style, 
+        ... more 
+    } = props;
 
     /** @constructor */ {
         return <>
             <Card
                 style={{
+                    justifyContent: "center",
+                    width: 300,
+                    aspectRatio: 1 / 1,
+                    gap: 10,
+                    borderRadius: 5,
+                    borderBottomWidth: 5,
+                    borderBottomColor: Theme.DK_COLOR,
+                    borderBottomStyle: "solid",
                     ... style
                 }}
                 { ... more }>
-                { /** Caption */ }
+                { /** Image */ }
+                <Link
+                    style={{
+                        display: "contents"
+                    }}
+                    onClick={
+                        () => Client.setProductFocus(product.name)
+                    }
+                    to={
+                        "/product"
+                    }>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundImage: `url(${ product.imageUrl ?? placeholderImage })`,
+                            backgroundSize: "cover",
+                            backgroundPositionX: "center",
+                            backgroundPositionY: "center",
+                            backgroundRepeat: "no-repeat",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            width: "100%",
+                            height: "100%",
+                            flex: 4
+                        }}>
+                        <div
+                            style={{
+
+                            }}>
+
+                        </div>
+                    </div>
+                </Link>
+                { /** Header */ }
                 <div
                     style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "center",
+                        justifyContent: "space-between",
                         alignItems: "center",
                         width: "100%",
                         height: "auto",
                         flex: 1,
-                        fontSize: "1em",
-                        fontWeight: "normal",
-                        fontFamily: Theme.FONT_1
+                        paddingLeft: 10,
+                        paddingRight: 10
                     }}>
-                    { childCaption }
+                    { /** Metadata */ }
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: 10
+                        }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "1.25em",
+                                fontWeight: "normal",
+                                fontFamily: Theme.FONT_1
+                            }}>
+                            { product.name }
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "0.75em",
+                                fontWeight: "normal",
+                                fontFamily: Theme.FONT_1,
+                                opacity: 0.75
+                            }}>
+                            £{ product.price.toPrecision(3) }
+                        </div>
+                    </div>
+                    { /** Stock */ }
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "0.75em",
+                            fontWeight: "normal",
+                            fontFamily: Theme.FONT_1,
+                            opacity: 0.75
+                        }}>
+                        { product.stock } left.
+                    </div>
                 </div>
-                { /** Image */ }
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "100%",
-                        height: "auto",
-                        flex: 1
-                    }}>
-                    { childImage }
-                </div>
+                
             </Card>
         </>;
     }

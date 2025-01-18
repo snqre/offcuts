@@ -4,6 +4,7 @@ import { require } from "reliq";
 import { panic } from "reliq";
 
 export type ClientShoppingCart = {
+    orders(): ReadonlyArray<OrderData>;
     cost(): number;
     addProduct(name: string): Promise<void>;
     addProduct(name: string, amount: bigint): Promise<void>;
@@ -22,7 +23,17 @@ export function ClientShoppingCart(
     
     /** @constructor */ {
         _orders = _args0 ?? [];
-        return { cost, addProduct, removeProduct, empty };
+        return {
+            orders,
+            cost, 
+            addProduct, 
+            removeProduct, 
+            empty 
+        };
+    }
+
+    function orders(): ReadonlyArray<OrderData> {
+        return _orders;
     }
 
     function cost(): number {

@@ -1,4 +1,5 @@
 import { UserData } from "@common";
+import { OrderData } from "@common";
 import { ClientProduct } from "@web-client";
 import { ClientShoppingCart } from "@web-client";
 import { ClientShowRoomTag } from "@web-client";
@@ -9,6 +10,7 @@ export type Client = {
     cache(): UserData | null;
     tagFocus(): string | null;
     productFocus(): string | null;
+    shoppingCartOrders(): ReadonlyArray<OrderData>;
     shoppingCartCost(): number;
     setTagFocus(tag: string): void;
     setProductFocus(name: string): Promise<void>;
@@ -28,6 +30,7 @@ export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomT
             cache,
             tagFocus,
             productFocus,
+            shoppingCartOrders,
             shoppingCartCost,
             setTagFocus,
             setProductFocus,
@@ -52,6 +55,10 @@ export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomT
 
     function productFocus(): string | null {
         return _product.get();
+    }
+
+    function shoppingCartOrders(): ReadonlyArray<OrderData> {
+        return _cart.orders();
     }
 
     function shoppingCartCost(): number {

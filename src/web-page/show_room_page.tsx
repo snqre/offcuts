@@ -66,20 +66,8 @@ export function ShowRoomPage(props: ShowRoomPageProps): ReactNode {
                                 {
                                     row.map(product =>
                                         <ProductCard
-                                            childCaption={
-                                                <>{ product.name }</>
-                                            }
-                                            childDescription={
-                                                <>{ }</>
-                                            }
-                                            childPrice={
-                                                <>{ product.price }</>
-                                            }
-                                            childStock={
-                                                <>{ product.stock }</>
-                                            }
-                                            childImage={
-                                                <>{ product.imageUrl }</>
+                                            product={
+                                                product
                                             }/>
                                     )
                                 }

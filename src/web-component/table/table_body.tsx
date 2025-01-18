@@ -17,7 +17,7 @@ export function TableBody(props: TableBodyProps): ReactNode {
                 alignItems: "center",
                 fontSize: "1em",
                 fontWeight: "normal",
-                fontFamily: Theme.FONT_0,
+                fontFamily: Theme.FONT_1,
                 color: Theme.DK_COLOR,
                 width: "100%",
                 height: "auto",

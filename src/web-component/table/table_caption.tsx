@@ -17,7 +17,7 @@ export function TableCaption(props: TableCaptionProps): ReactNode {
                 alignItems: "center",
                 fontSize: "2em",
                 fontWeight: "normal",
-                fontFamily: Theme.FONT_0,
+                fontFamily: Theme.FONT_1,
                 color: Theme.DK_COLOR,
                 ... style
             }}
