@@ -15,24 +15,11 @@ export function ShowRoomPage(props: ShowRoomPageProps): ReactNode {
     let { style, ... more } = props;
     let [tag, setTag] = useState<string | null>();
     let [products, setProducts] = useState<Array<ProductData>>([]);
-    let [rows, setRows] = useState<Array<Array<ProductData>>>([]);
-    let [rowsLength, setRowsLength] = useState<number>(4);
 
     useEffect(() => {
         setTag((Client.tagFocus()));
         return;
-    }, []);
-
-    useEffect(() => {
-        let rows: Array<Array<ProductData>> = [];
-        let i: number = 0;
-        while (i < products.length) {
-            rows.push(products.slice(i, i + rowsLength));
-            i ++;
-        }
-        setRows(rows);
-        return;
-    }, [products, rowsLength]);
+    });
 
     useEffect(() => {
         (async () => {
@@ -43,6 +30,7 @@ export function ShowRoomPage(props: ShowRoomPageProps): ReactNode {
                     setProducts(products);
                     return;
                 }
+                setProducts([]);
                 return;
             }
             let products: Array<ProductData> = await Server.products();
@@ -59,20 +47,25 @@ export function ShowRoomPage(props: ShowRoomPageProps): ReactNode {
                     ... style
                 }}
                 { ... more }>
-                <div>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "start",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        width: "100%",
+                        height: "100%",
+                        flex: 1,
+                        gap: 20
+                    }}>
                     {
-                        rows.map(row =>
-                            <div>
-                                {
-                                    row.map(product =>
-                                        <ProductCard
-                                            product={
-                                                product
-                                            }/>
-                                    )
-                                }
-                            </div>
-                        )
+                        products.map(product => {
+                            return <ProductCard
+                                product={
+                                    product
+                                }/>
+                        })
                     }
                 </div>
             </ResponsiveAnchorPage>

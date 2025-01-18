@@ -36,8 +36,18 @@ export function AdminPage(): ReactNode {
                         async args => {
                             args.shift();
                             
+                            if (args[0] === "help") {
+                                return ""
+                                    + "\n" + "Commands"
+                                    + "\n" + "1. tags"
+                                    + "\n" + "2. tags -> TEST"
+                                    + "\n" + "3. products"
+                                    + "\n" + "4. list-product PASSWORD PRICE STOCK TAG"
+                            }
+
                             /** @command */
-                            if (args[0] === "tags" && args[1] === "->") {
+                            /** tags -> Test */
+                            else if (args[0] === "tags" && args[1] === "->") {
                                 try {
                                     let tag: string = args[2];
                                     let map: Map<string, Array<ProductData> | undefined> = await Server.sortedProducts();
@@ -60,6 +70,7 @@ export function AdminPage(): ReactNode {
                             }
 
                             /** @command */
+                            /** tags */
                             else if (args[0] === "tags") {
                                 try {
                                     return toString((await Server.tags()));
@@ -94,7 +105,8 @@ export function AdminPage(): ReactNode {
                                 }
                             }
 
-
+                            /** @command */
+                            /** list-product PASSWORD Brush 2.50 20 Test url */
                             else if (args[0] === "list-product") {
                                 try {
                                     let passwordInput: string = args[1];
@@ -111,7 +123,7 @@ export function AdminPage(): ReactNode {
                                         name: name,
                                         price: price,
                                         stock: stock,
-                                        tags: ["Test"]
+                                        tags: [tagInput]
                                     });
                                     await Server.listProduct(password, product);
                                     return "PRODUCT_LISTED_OK"

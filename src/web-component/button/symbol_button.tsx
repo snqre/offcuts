@@ -32,6 +32,10 @@ export function SymbolButton(props: SymbolButtonProps): ReactNode {
                     background: inverse ? Theme.DK_COLOR : Theme.LT_COLOR,
                     color: inverse ? Theme.LT_COLOR : Theme.DK_COLOR,
                     borderRadius: 5,
+                    fontSize: "1em",
+                    fontWeight: "normal",
+                    fontFamily: Theme.FONT_1,
+                    boxShadow: Theme.SHADOW,
                     ... style
                 }}
                 { ... more }>

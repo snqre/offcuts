@@ -1,4 +1,4 @@
-import { OrderData } from "@common";
+import { OrderData, ProductData } from "@common";
 import { Server } from "@web-server";
 import { require } from "reliq";
 import { panic } from "reliq";
@@ -64,7 +64,14 @@ export function ClientShoppingCart(
             }
             i += 1n;
         }
-        panic("SHOPPING_CART.ERR_PRODUCT_NOT_FOUND_DESPITE_SERVER_CONFIRMATION");
+        _orders.push(OrderData({
+            product: (await Server
+                .products())
+                .filter(product => product.name === args0)
+                .at(0) ?? panic("SHOPPING_CART.ERR_PRODUCT_NOT_FOUND"),
+            amount: 1
+        }));
+        return;
     }
 
     function removeProduct(name: string): void;

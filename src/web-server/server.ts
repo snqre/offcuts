@@ -155,7 +155,7 @@ export const Server: Server = (() => {
     }
 
     async function listProduct(password: string, product: ProductData): Promise<void> {
-        let response: unknown = (await Axios.post("/store/increase-price", { password, product }));
+        let response: unknown = (await Axios.post("/store/list-product", { password, product }));
         let payload = ZodValidator.object({
             message: ZodValidator.string().optional(),
             e: ZodValidator.unknown().optional()

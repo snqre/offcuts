@@ -6,6 +6,7 @@ import { ProductData } from "@common";
 import { Card } from "@web-component";
 import { Client } from "@web-client";
 import { Theme } from "@web-constant";
+import { useState } from "react";
 
 // @ts-ignore
 import placeholderImage from "../../web/public/img/placeholder_product.jpg";
@@ -22,6 +23,7 @@ export function ProductCard(props: ProductCardProps): ReactNode {
         style, 
         ... more 
     } = props;
+    let [shoppingCartAmount, setShoppingCartAmount] = useState<number>(0);
 
     /** @constructor */ {
         return <>
@@ -134,10 +136,80 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                             fontFamily: Theme.FONT_1,
                             opacity: 0.75
                         }}>
-                        { product.stock } left.
+                        { product.stock } left
                     </div>
                 </div>
-                
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "start",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "auto",
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        flex: 1,
+                        gap: 10
+                    }}>
+                    <SymbolButton
+                        onClick={
+                            async () => {
+                                await Client.addProductToShoppingCart(product.name);
+                                let amount: number = Client
+                                    .shoppingCartOrders()
+                                    .filter(order => order.product.name === product.name)
+                                    .at(0)
+                                    ?.amount ?? 0;
+                                setShoppingCartAmount(amount);
+                                return;
+                            }
+                        }
+                        inverse
+                        style={{
+                            width: 40,
+                            aspectRatio: 1 / 1,
+                            cursor: "pointer"
+                        }}>
+                        +
+                    </SymbolButton>
+                    <SymbolButton
+                        onClick={
+                            () => {
+                                Client.removeProductFromShoppingCart(product.name);
+                                let amount: number = Client
+                                    .shoppingCartOrders()
+                                    .filter(order => order.product.name === product.name)
+                                    .at(0)
+                                    ?.amount ?? 0;
+                                setShoppingCartAmount(amount);
+                                return;
+                            }
+                        }
+                        style={{
+                            width: 40,
+                            aspectRatio: 1 / 1,
+                            cursor: "pointer"
+                        }}>
+                        -
+                    </SymbolButton>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "end",
+                            alignItems: "center",
+                            fontSize: "0.75em",
+                            fontWeight: "normal",
+                            fontFamily: Theme.FONT_1,
+                            width: "100%",
+                            height: "auto",
+                            flex: 1,
+                            opacity: 0.75
+                        }}>
+                        { shoppingCartAmount } in your basket
+                    </div>
+                </div>
             </Card>
         </>;
     }
