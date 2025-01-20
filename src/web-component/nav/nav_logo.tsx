@@ -31,6 +31,7 @@ export function NavLogo(props: NavLogoProps): ReactNode {
                         backgroundPositionX: "center",
                         backgroundPositionY: "center",
                         backgroundRepeat: "no-repeat",
+                        cursor: "pointer",
                         width: 150,
                         aspectRatio: 2 / 1,
                         ... style
