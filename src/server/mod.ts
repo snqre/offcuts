@@ -11,3 +11,4 @@ export * from "./payment/stripe/stripe_socket_adaptor";
 export * from "./router/checkout_router";
 export * from "./router/react_router";
 export * from "./router/store_router";
+export * from "./router/user_router";

@@ -6,6 +6,7 @@ import { Store } from "@server";
 import { CheckoutRouter } from "@server";
 import { ReactRouter } from "@server";
 import { StoreRouter } from "@server";
+import { UserRouter } from "@server";
 import { require } from "reliq";
 import { join } from "path";
 
@@ -32,7 +33,8 @@ export function Server(): Server {
             .use(Express.json())
             .use(ReactRouter("/", join(__dirname, "web/app.html")))
             .use(StoreRouter(store))
-            .use(CheckoutRouter(checkoutApiKey))
+            .use(CheckoutRouter(checkoutApiKey, store))
+            .use(UserRouter(redis))
             .listen(port);
         console.log("SERVER.RUNNING", __dirname, port);
         return;
