@@ -22,24 +22,17 @@ export function NavSearchBar(props: NavSearchBarProps): ReactNode {
     let [suggestions, setSuggestions] = useState<Array<ProductData>>([]);
 
     useEffect(() => {
-        (async () => {
-            setProducts((await Server.products()));
-            return;
-        })();
+        _updateProducts();
         return;
     }, []);
 
     useEffect(() => {
-        if (input.trim() === "") {
-            setToggled(false);
+        if (!_hasInput()) {
+            _close();
             return;
         }
-        let suggestions: Array<ProductData> = products
-            .map(product => ({ ... product, score:  get(input, product.name.toLowerCase()) }))
-            .sort((x0, x1) => x0.score - x1.score)
-            .slice(0, 10);
-        setSuggestions(suggestions);
-        setToggled(true);
+        _updateSuggestions();
+        _open();
         return;
     }, [input]);
 
@@ -145,5 +138,34 @@ export function NavSearchBar(props: NavSearchBarProps): ReactNode {
                 </> : undefined }
             </div>
         </>;
+    }
+    
+    function _hasInput(): boolean {
+        return input.trim().length !== 0;
+    }
+
+    function _open(): void {
+        setToggled(true);
+        return;
+    }
+
+    function _close(): void {
+        setToggled(false);
+        return;
+    }
+
+    function _updateSuggestions(): void {
+        let suggestions: Array<ProductData> = products
+            .map(product => ({ ... product, score: get(input, product.name.toLowerCase()) }))
+            .sort((x0, x1) => x0.score - x1.score)
+            .slice(0, 10);
+        setSuggestions(suggestions);
+        return;
+    }
+
+    async function _updateProducts(): Promise<void> {
+        let products: Array<ProductData> = await Server.products();
+        setProducts(products);
+        return;
     }
 }

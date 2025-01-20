@@ -55,7 +55,7 @@ export function ResponsiveAnchorPage(props: ResponsiveAnchorPageProps): ReactNod
     return <>
         <div { ... wrapper$ }>
             <div { ... innerWrapper$ }>
-                <Nav categories={[<>Paint</>, <>Wood</>, <>Steel</>]}/>
+                <Nav/>
                 <div { ... contentWrapper$ }>
                     { children }
                 </div>

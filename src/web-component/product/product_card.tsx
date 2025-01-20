@@ -7,6 +7,7 @@ import { Card } from "@web-component";
 import { Client } from "@web-client";
 import { Theme } from "@web-constant";
 import { useState } from "react";
+import { useEffect } from "react";
 
 // @ts-ignore
 import placeholderImage from "../../web/public/img/placeholder_product.jpg";
@@ -24,6 +25,11 @@ export function ProductCard(props: ProductCardProps): ReactNode {
         ... more 
     } = props;
     let [shoppingCartAmount, setShoppingCartAmount] = useState<number>(0);
+
+    useEffect(() => {
+        _updateAmount();
+        return;
+    }, []);
 
     /** @constructor */ {
         return <>
@@ -156,12 +162,7 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                         onClick={
                             async () => {
                                 await Client.addProductToShoppingCart(product.name);
-                                let amount: number = Client
-                                    .shoppingCartOrders()
-                                    .filter(order => order.product.name === product.name)
-                                    .at(0)
-                                    ?.amount ?? 0;
-                                setShoppingCartAmount(amount);
+                                _updateAmount();
                                 return;
                             }
                         }
@@ -177,12 +178,7 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                         onClick={
                             () => {
                                 Client.removeProductFromShoppingCart(product.name);
-                                let amount: number = Client
-                                    .shoppingCartOrders()
-                                    .filter(order => order.product.name === product.name)
-                                    .at(0)
-                                    ?.amount ?? 0;
-                                setShoppingCartAmount(amount);
+                                _updateAmount();
                                 return;
                             }
                         }
@@ -212,5 +208,15 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                 </div>
             </Card>
         </>;
+    }
+
+    function _updateAmount(): void {
+        let amount: number = Client
+            .shoppingCartOrders()
+            .filter(order => order.product.name === product.name)
+            .at(0)
+            ?.amount || 0;
+        setShoppingCartAmount(amount);
+        return;
     }
 }
