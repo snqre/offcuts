@@ -33,7 +33,7 @@ __export(server_exports, {
   Server: () => Server
 });
 module.exports = __toCommonJS(server_exports);
-var import_express3 = __toESM(require("express"), 1);
+var import_express4 = __toESM(require("express"), 1);
 
 // src/server/auth/auth.ts
 var import_bcrypt = require("bcrypt");
@@ -313,32 +313,144 @@ function Store(_db) {
 
 // src/server/payment/stripe/stripe_checkout_session_line_item.ts
 var import_stripe = require("stripe");
+function StripeCheckoutSessionLineItem(order) {
+  return {
+    quantity: Number(order.amount),
+    price_data: {
+      currency: "gbp",
+      unit_amount: order.product.price,
+      product_data: {
+        name: order.product.name,
+        description: order.product.name
+      }
+    }
+  };
+}
 
 // src/server/payment/stripe/stripe_checkout_session.ts
 var import_stripe2 = require("stripe");
 
+// src/server/payment/stripe/stripe_payment_provider.ts
+var import_reliq11 = require("reliq");
+function StripePaymentProvider(_socket) {
+  {
+    return { receive };
+  }
+  async function receive(baseUrl, orders, onSuccess, onFailure) {
+    let session = await _socket.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [...orders.map((order) => {
+        return StripeCheckoutSessionLineItem(order);
+      }) || []],
+      mode: "payment",
+      success_url: baseUrl + "/",
+      cancel_url: baseUrl + "/"
+    });
+    let sessionUrl = session.url;
+    (0, import_reliq11.require)(sessionUrl !== null, "STRIPE_PAYMENT_PROVIDER.ERR_MISSING_SESSION_URL");
+    let sessionId = session.id;
+    let timer = setInterval(async () => {
+      let updatedSession = await _socket.checkout.sessions.retrieve(sessionId);
+      let isComplete = updatedSession.payment_status === "paid" || updatedSession.status === "complete";
+      let isExpired = updatedSession.status === "expired";
+      if (isExpired) {
+        clearInterval(timer);
+        onFailure(updatedSession);
+        return;
+      } else if (isComplete) {
+        clearInterval(timer);
+        onSuccess(updatedSession);
+        return;
+      }
+    }, _seconds(9));
+    setTimeout(async () => {
+      clearInterval(timer);
+      let updatedSession = await _socket.checkout.sessions.retrieve(sessionId);
+      onFailure(updatedSession);
+      return;
+    }, _seconds(3600));
+    return sessionUrl;
+  }
+  function _seconds(ms) {
+    return ms * 1e3;
+  }
+}
+
 // src/server/payment/stripe/stripe_socket_adaptor.ts
 var import_stripe3 = __toESM(require("stripe"), 1);
-var import_reliq11 = require("reliq");
+var import_reliq12 = require("reliq");
+function StripeSocketAdaptor(_apiKey) {
+  {
+    (0, import_reliq12.require)(_apiKey.trim().length !== 0, "STRIPE_SOCKET_ADAPTOR.ERR_INVALID_API_KEY");
+    return new import_stripe3.default(_apiKey);
+  }
+}
+
+// src/server/router/checkout_router.ts
+var import_express = require("express");
+var import_zod6 = require("zod");
+function CheckoutRouter(_apiKey, _store) {
+  {
+    return (0, import_express.Router)().post("/checkout", async (rq, rs) => {
+      try {
+        let { orders } = rq.body;
+        if (orders.length === 0) {
+          let message = "NO_ORDERS";
+          rs.send({ message });
+          return;
+        }
+        orders.forEach((order) => {
+          order.product.price *= 100;
+          return;
+        });
+        let domain = rq.headers.host;
+        let baseUrl = `http://${domain}`;
+        let socket = StripeSocketAdaptor(_apiKey);
+        let paymentProvider = StripePaymentProvider(socket);
+        let url = await paymentProvider.receive(
+          baseUrl,
+          orders,
+          (session) => {
+            console.log("Purchase successful");
+            orders.forEach(async (order) => {
+              await _store.decreaseStock(order.product.name, BigInt(order.amount));
+              return;
+            });
+            return;
+          },
+          (session) => {
+            console.log("Purchase expired.");
+            return;
+          }
+        );
+        rs.send({ url });
+        return;
+      } catch (e) {
+        rs.send({ e });
+        return;
+      }
+    });
+  }
+}
 
 // src/server/router/react_router.ts
-var import_express = require("express");
-var import_reliq12 = require("reliq");
+var import_express2 = require("express");
+var import_reliq13 = require("reliq");
 function ReactRouter(route, htmlFilePath) {
   {
-    (0, import_reliq12.require)(route.trim().length !== 0, "REACT_ROUTER.ERR_INVALID_ROUTE");
-    (0, import_reliq12.require)(route.startsWith("/"), "REACT_ROUTER.ERR_INVALID_ROUTE");
-    return (0, import_express.Router)().get(route, (__, rs) => rs.sendFile(htmlFilePath));
+    (0, import_reliq13.require)(route.trim().length !== 0, "REACT_ROUTER.ERR_INVALID_ROUTE");
+    (0, import_reliq13.require)(route.startsWith("/"), "REACT_ROUTER.ERR_INVALID_ROUTE");
+    return (0, import_express2.Router)().get(route, (__, rs) => rs.sendFile(htmlFilePath));
   }
 }
 
 // src/server/router/store_router.ts
-var import_express2 = require("express");
-var import_zod6 = require("zod");
-var import_reliq13 = require("reliq");
+var import_express3 = require("express");
+var import_zod7 = require("zod");
+var import_reliq14 = require("reliq");
 function StoreRouter(_store) {
   {
-    return (0, import_express2.Router)().get("/store/products", async (__, rs) => {
+    return (0, import_express3.Router)().get("/store/products", async (__, rs) => {
       try {
         rs.send({ products: await _store.products() });
         return;
@@ -363,10 +475,10 @@ function StoreRouter(_store) {
       }
     }).post("/store/set-stock", async (rq, rs) => {
       try {
-        let payload = import_zod6.z.object({
-          password: import_zod6.z.string().refine((v) => _hasPermission(v)),
-          name: import_zod6.z.string(),
-          amount: import_zod6.z.number()
+        let payload = import_zod7.z.object({
+          password: import_zod7.z.string().refine((v) => _hasPermission(v)),
+          name: import_zod7.z.string(),
+          amount: import_zod7.z.number()
         }).parse(rq.body);
         let { name, amount } = payload;
         await _store.setStock(name, BigInt(amount));
@@ -379,10 +491,10 @@ function StoreRouter(_store) {
       }
     }).post("/store/increase-stock", async (rq, rs) => {
       try {
-        let payload = import_zod6.z.object({
-          password: import_zod6.z.string().refine((v) => _hasPermission(v)),
-          name: import_zod6.z.string(),
-          amount: import_zod6.z.number()
+        let payload = import_zod7.z.object({
+          password: import_zod7.z.string().refine((v) => _hasPermission(v)),
+          name: import_zod7.z.string(),
+          amount: import_zod7.z.number()
         }).parse(rq.body);
         let { name, amount } = payload;
         await _store.increaseStock(name, BigInt(amount));
@@ -510,7 +622,7 @@ function StoreRouter(_store) {
 }
 
 // src/server/server.ts
-var import_reliq14 = require("reliq");
+var import_reliq15 = require("reliq");
 var import_path = require("path");
 function Server() {
   {
@@ -518,12 +630,14 @@ function Server() {
   }
   async function run(...[]) {
     let redisPassword = process.env?.["REDIS_INT_KEY"];
-    (0, import_reliq14.require)(redisPassword !== void 0, "SERVER.ERR_REDIS_INT_KEY_REQUIRED");
+    (0, import_reliq15.require)(redisPassword !== void 0, "SERVER.ERR_REDIS_INT_KEY_REQUIRED");
     let redisSocketAdaptor = await RedisSocketAdaptor("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com", redisPassword, 15540n);
     let redis = await Redis(redisSocketAdaptor, "*");
     let store = Store(redis);
+    let checkoutApiKey = process.env?.["STRIPE_INT_TEST_KEY"];
+    (0, import_reliq15.require)(checkoutApiKey !== void 0, "SERVER.ERR_STRIPE_INT_TEST_KEY_REQUIRED");
     let port = 8080;
-    let socket = (0, import_express3.default)().use(import_express3.default.static((0, import_path.join)(__dirname, "web"))).use(import_express3.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).use(StoreRouter(store)).listen(port);
+    let socket = (0, import_express4.default)().use(import_express4.default.static((0, import_path.join)(__dirname, "web"))).use(import_express4.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).use(StoreRouter(store)).use(CheckoutRouter(checkoutApiKey)).listen(port);
     console.log("SERVER.RUNNING", __dirname, port);
     return;
   }

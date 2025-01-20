@@ -14,13 +14,15 @@ export function StripePaymentProvider(_socket: StripeSocketAdaptor) {
         return { receive };
     }
 
-    async function receive(orders: Array<OrderData>, onSuccess: Function<StripeCheckoutSession, void>, onFailure: Function<StripeCheckoutSession, void>): Promise<string> {
+    async function receive(baseUrl: string, orders: Array<OrderData>, onSuccess: Function<StripeCheckoutSession, void>, onFailure: Function<StripeCheckoutSession, void>): Promise<string> {
         let session: StripeCheckoutSession = await _socket.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [...orders.map(order => {
                 return StripeCheckoutSessionLineItem(order);
-            })],
-            mode: "payment"
+            }) || []],
+            mode: "payment",
+            success_url: baseUrl + "/",
+            cancel_url: baseUrl + "/"
         });
         let sessionUrl: string | null = session.url;
         require(sessionUrl !== null, "STRIPE_PAYMENT_PROVIDER.ERR_MISSING_SESSION_URL");
@@ -40,8 +42,10 @@ export function StripePaymentProvider(_socket: StripeSocketAdaptor) {
                 return;
             }
         }, _seconds(9)); 
-        setTimeout(() => {
+        setTimeout(async () => {
             clearInterval(timer);
+            let updatedSession: StripeCheckoutSession = await _socket.checkout.sessions.retrieve(sessionId);
+            onFailure(updatedSession);
             return;
         }, _seconds(3600));
         return sessionUrl;

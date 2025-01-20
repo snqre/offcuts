@@ -23,6 +23,7 @@ export * from "./nav/nav";
 export * from "./page/responsive_anchor_page";
 export * from "./page/responsive_page";
 export * from "./product/product_card";
+export * from "./stripe/checkout_button";
 export * from "./table/table_body";
 export * from "./table/table_caption";
 export * from "./table/table_heading";

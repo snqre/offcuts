@@ -3,6 +3,7 @@ import { ResponsiveAnchorPage } from "@web-component";
 import { Table } from "@web-component";
 import { TableItem } from "@web-component";
 import { SymbolButton } from "@web-component";
+import { CheckoutButton } from "@web-component";
 import { Client } from "@web-client";
 import { Theme } from "@web-constant";
 import { useState } from "react";
@@ -103,7 +104,7 @@ export function BasketPage(): ReactNode {
                             }}>
                             Total: £{ cost.toPrecision(3) }
                         </div>
-                        
+                        <CheckoutButton/>
                     </div>
                 </div>
             </ResponsiveAnchorPage>
