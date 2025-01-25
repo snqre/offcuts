@@ -21,9 +21,11 @@ export function ForYouPage(props: ForYouPageProps): ReactNode {
     useEffect(() => {
         let timer: Timer = setInterval(() => {
             if (imagePool.length === 0) return;
-            [setImage0, setImage1, setImage2, setImage3].map(set => {
-                /// Pick a random image from the `imagePool`.
-                /// TODO
+            [setImage0, setImage1, setImage2, setImage3].forEach(set => {
+                let random: number = Math.random();
+                let randomPosition: number = Math.round((imagePool.length / 100) * (random * 100));
+                set(imagePool.at(randomPosition)!);
+                return;
             });
             return;
         }, 30 * 1000);
