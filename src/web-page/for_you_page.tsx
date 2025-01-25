@@ -2,11 +2,34 @@ import type { ReactNode } from "react";
 import type { ResponsiveAnchorPageProps } from "@web-component";
 import { ResponsiveAnchorPage } from "@web-component";
 import { Theme } from "@web-constant";
+import { useState } from "react";
+import { useEffect } from "react";
+
+// @ts-ignore
+import placeholderImage from "../web/public/img/placeholder_product.jpg";
 
 export type ForYouPageProps =
     & Omit<ResponsiveAnchorPageProps, "children">;
 
 export function ForYouPage(props: ForYouPageProps): ReactNode {
+    let [imagePool, setImagePool] = useState<Array<`url(${ string })`>>([]);
+    let [image0, setImage0] = useState<`url(${ string })`>(`url(${ placeholderImage })`);
+    let [image1, setImage1] = useState<`url(${ string })`>(`url(${ placeholderImage })`);
+    let [image2, setImage2] = useState<`url(${ string })`>(`url(${ placeholderImage })`);
+    let [image3, setImage3] = useState<`url(${ string })`>(`url(${ placeholderImage })`);
+
+    useEffect(() => {
+        let timer: Timer = setInterval(() => {
+            if (imagePool.length === 0) return;
+            [setImage0, setImage1, setImage2, setImage3].map(set => {
+                /// Pick a random image from the `imagePool`.
+                /// TODO
+            });
+            return;
+        }, 30 * 1000);
+        return () => clearInterval(timer);
+    }, []);
+
     /** @render */ {
         return <>
             <ResponsiveAnchorPage>
@@ -214,9 +237,74 @@ export function ForYouPage(props: ForYouPageProps): ReactNode {
                             alignItems: "center",
                             width: "100%",
                             height: "100%",
-                            flex: 1
+                            flex: 1,
+                            gap: 10
                         }}>
-
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                width: "100%",
+                                height: "100%",
+                                flex: 1,
+                                paddingLeft: 20,
+                                paddingTop: 20,
+                                paddingBottom: 20,
+                                gap: 10
+                            }}>
+                            {
+                                [image0, image1, image2].map(image => 
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            backgroundImage: image,
+                                            backgroundSize: "cover",
+                                            backgroundPositionX: "center",
+                                            backgroundPositionY: "center",
+                                            backgroundRepeat: "no-repeat",
+                                            borderRadius: 10,
+                                            width: "100%",
+                                            height: "100%",
+                                            flex: 1
+                                        }}/>
+                                )
+                            }
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "100%",
+                                height: "100%",
+                                flex: 1,
+                                paddingRight: 20,
+                                paddingTop: 20,
+                                paddingBottom: 20
+                            }}>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    width: "100%",
+                                    height: "100%",
+                                    flex: 1,
+                                    backgroundImage: image3,
+                                    backgroundSize: "cover",
+                                    backgroundPositionX: "center",
+                                    backgroundPositionY: "center",
+                                    backgroundRepeat: "no-repeat",
+                                    borderRadius: 10
+                                }}/>
+                        </div>
                     </div>
                 </div>
             </ResponsiveAnchorPage>
