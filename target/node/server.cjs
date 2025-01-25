@@ -33,12 +33,48 @@ __export(server_exports, {
   Server: () => Server
 });
 module.exports = __toCommonJS(server_exports);
-var import_express4 = __toESM(require("express"), 1);
+var import_express5 = __toESM(require("express"), 1);
 
 // src/server/auth/auth.ts
 var import_bcrypt = require("bcrypt");
 var import_bcrypt2 = require("bcrypt");
 var import_reliq = require("reliq");
+var _SALT = 64;
+var _MIN_SALT = 0;
+var _MAX_SALT = 256;
+function Auth(_salt = _SALT) {
+  let _hash;
+  {
+    (0, import_reliq.require)(_salt >= _MIN_SALT, "AUTH.ERR_ASSIGNED_SALT_CANNOT_BE_BELOW_THE_CONSTANT_MINIMUM");
+    (0, import_reliq.require)(_salt <= _MAX_SALT, "AUTH.ERR_ASSIGNED_SALT_CANNOT_BE_ABOVE_THE_CONSTANT_MAXIMUM");
+    return { get, set, setByEncryption, decrypt };
+  }
+  function get(...[]) {
+    (0, import_reliq.require)(_hash !== void 0, "AUTH.ERR_UNASSIGNED_HASH");
+    return _hash;
+  }
+  function set(...[hash2]) {
+    (0, import_reliq.require)(hash2.trim().length !== 0, "AUTH.ERR_INVALID_HASH");
+    _hash = hash2;
+    return;
+  }
+  async function setByEncryption(...[password]) {
+    (0, import_reliq.require)(password.trim().length !== 0, "AUTH.ERR_INVALID_PASSWORD");
+    _hash = await (0, import_bcrypt.hash)(password, _salt);
+    return;
+  }
+  async function decrypt(...[password]) {
+    return await (0, import_bcrypt2.compare)(password, _hash);
+  }
+}
+async function AuthFromPassword(_password, _salt = _SALT) {
+  let _auth;
+  {
+    _auth = Auth(_salt);
+    await _auth.setByEncryption(_password);
+    return { ..._auth };
+  }
+}
 
 // src/common/admin_data_schema.ts
 var import_zod = require("zod");
@@ -113,6 +149,20 @@ var UserDataSchema = import_zod5.z.object({
 // src/common/user_data.ts
 var import_validator2 = __toESM(require("validator"), 1);
 var import_reliq7 = require("reliq");
+function UserData(_instance) {
+  {
+    (0, import_reliq7.require)(_instance.username.trim().length !== 0, "USER_DATA.ERR_INVALID_USERNAME");
+    (0, import_reliq7.require)(_instance.hash.trim().length !== 0, "USER_DATA.ERR_INVALID_HASH");
+    (0, import_reliq7.require)(_instance.email ? import_validator2.default.isEmail(_instance.email) : true, "USER_DATA.ERR_INVALID_EMAIL");
+    (0, import_reliq7.require)(_instance.phoneNumber ? import_validator2.default.isMobilePhone(_instance.phoneNumber) : true, "USER_DATA.ERR_INVALID_PHONE_NUMBER");
+    (0, import_reliq7.require)(_instance.address ? _instance.address.trim().length !== 0 : true, "USER_DATA.ERR_INVALID_ADDRESS");
+    (0, import_reliq7.require)(isUserData(_instance), "USER_DATA.ERR_SCHEMA_VALIDATION_FAILED");
+    return _instance;
+  }
+}
+function isUserData(unknown) {
+  return UserDataSchema.safeParse(unknown).success;
+}
 
 // src/server/db/redis/redis_socket_adaptor.ts
 var import_redis = require("redis");
@@ -621,8 +671,37 @@ function StoreRouter(_store) {
   }
 }
 
-// src/server/server.ts
+// src/server/router/user_router.ts
+var import_express4 = require("express");
 var import_reliq15 = require("reliq");
+function UserRouter(_database) {
+  {
+    return (0, import_express4.Router)().post("/sign-up", async (rq, rs) => {
+      try {
+        let { username, password } = rq.body;
+        let app = await _database.get();
+        let match = app.users.filter((user) => user.username === username).length !== 0;
+        (0, import_reliq15.require)(match === false, "USER_ROUTER.USERNAME_ALREADY_TAKEN");
+        app.users.push(UserData({
+          username,
+          hash: (await AuthFromPassword(password)).get(),
+          orders: []
+        }));
+        await _database.set(app);
+        let message = "OK";
+        rs.send({ message });
+        return;
+      } catch (e) {
+        rs.send({ e });
+        return;
+      }
+    }).post("/sign-in", async (rq, rs) => {
+    });
+  }
+}
+
+// src/server/server.ts
+var import_reliq16 = require("reliq");
 var import_path = require("path");
 function Server() {
   {
@@ -630,14 +709,14 @@ function Server() {
   }
   async function run(...[]) {
     let redisPassword = process.env?.["REDIS_INT_KEY"];
-    (0, import_reliq15.require)(redisPassword !== void 0, "SERVER.ERR_REDIS_INT_KEY_REQUIRED");
+    (0, import_reliq16.require)(redisPassword !== void 0, "SERVER.ERR_REDIS_INT_KEY_REQUIRED");
     let redisSocketAdaptor = await RedisSocketAdaptor("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com", redisPassword, 15540n);
     let redis = await Redis(redisSocketAdaptor, "*");
     let store = Store(redis);
     let checkoutApiKey = process.env?.["STRIPE_INT_TEST_KEY"];
-    (0, import_reliq15.require)(checkoutApiKey !== void 0, "SERVER.ERR_STRIPE_INT_TEST_KEY_REQUIRED");
+    (0, import_reliq16.require)(checkoutApiKey !== void 0, "SERVER.ERR_STRIPE_INT_TEST_KEY_REQUIRED");
     let port = 8080;
-    let socket = (0, import_express4.default)().use(import_express4.default.static((0, import_path.join)(__dirname, "web"))).use(import_express4.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).use(StoreRouter(store)).use(CheckoutRouter(checkoutApiKey)).listen(port);
+    let socket = (0, import_express5.default)().use(import_express5.default.static((0, import_path.join)(__dirname, "web"))).use(import_express5.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).use(StoreRouter(store)).use(CheckoutRouter(checkoutApiKey, store)).use(UserRouter(redis)).listen(port);
     console.log("SERVER.RUNNING", __dirname, port);
     return;
   }

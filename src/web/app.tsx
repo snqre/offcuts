@@ -4,6 +4,7 @@ import { BasketPage } from "@web-page";
 import { AdminPage } from "@web-page";
 import { ShowRoomPage } from "@web-page";
 import { ProductPage } from "@web-page";
+import { ForYouPage } from "@web-page";
 import { BrowserRouter } from "react-router-dom";
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
@@ -18,6 +19,11 @@ function App(): ReactNode {
                 <Route path="/admin" element={ <AdminPage/> }/>
                 <Route path="/show-room" element={ <ShowRoomPage/> }/>
                 <Route path="/product" element={ <ProductPage/> }/>
+                <Route
+                    path="/for-you"
+                    element={
+                        <ForYouPage/>
+                    }/>
             </Routes>
         </BrowserRouter>
     </>

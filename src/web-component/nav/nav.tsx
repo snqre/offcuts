@@ -51,7 +51,7 @@ export function Nav(props: NavProps): React.ReactNode {
                 <NavLogo/>
                 <NavButtonGroup>
                     <NavCallToActionButton
-                        to="/">
+                        to="/for-you">
                         For You
                     </NavCallToActionButton>
                     <NavTagsDropDownButton
