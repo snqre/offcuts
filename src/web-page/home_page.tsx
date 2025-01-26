@@ -6,141 +6,145 @@ import { Theme } from "@web-constant";
 
 export function HomePage(): ReactNode {
     return <>
-        <ResponsiveAnchorPage
-            style={{
-                gap: 20
-            }}>
+        <ResponsiveAnchorPage>
             <div
                 style={{
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
                     width: "100%",
-                    fontSize: "10em",
-                    fontWeight: "normal",
-                    fontFamily: Theme.FONT_0,
-                    color: Theme.DK_COLOR,
+                    height: "100%",
+                    flex: 1
                 }}>
-                OFFCUTS
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        fontSize: "9em",
+                        fontWeight: "normal",
+                        fontFamily: Theme.FONT_0,
+                        color: Theme.DK_COLOR
+                    }}>
+                    OFFCUTS
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingBottom: 32
+                    }}>
+                    { 
+                        ["Revive.", "Reuse.", "Rebuild."].map(subHeading => {
+                            return <>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        fontSize: "3em",
+                                        fontWeight: "normal",
+                                        fontFamily: Theme.FONT_1,
+                                        color: Theme.SP_COLOR,
+                                        paddingLeft: 36,
+                                        paddingRight: 36
+                                    }}>
+                                    { subHeading }
+                                </div>  
+                            </>;
+                        })
+                    }
+                </div>
             </div>
             <div
                 style={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    gap: 20,
-                    paddingTop: 10,
-                    paddingBottom: 10
-                }}>
-                <HomePageSubHeadingTag>Revive.</HomePageSubHeadingTag>
-                <HomePageSubHeadingTag>Reuse.</HomePageSubHeadingTag>
-                <HomePageSubHeadingTag>Rebuild.</HomePageSubHeadingTag>
-            </div>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
                     alignItems: "start",
                     width: "100%",
-                    gap: 40
+                    height: "100%",
+                    flex: 1
                 }}>
-                <CaptionAndContentCard
-                    childCaption="Why Offcuts?"
-                    childContent={
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "start",
-                                alignItems: "center",
-                                width: "100%",
-                                height: "auto",
-                                flex: 1,
-                                gap: 10
-                            }}>
-                            <p>
-                                <strong>Sustainable Solutions: </strong>Divert construction waste from landfills while supporting eco-friendly practices.
-                            </p>
-                            <p><strong>Affordable Materials: </strong>Access high-quality reclaimed materials at a fraction of the cost.</p>
-                            <p><strong>Fast & Easy: </strong>List, buy, or request leftover materials with ease.</p>
-                        </div>
-                    }/>
-                <CaptionAndContentCard
-                    childCaption="For Contractors"
-                    childContent="Turn your surplus into profit with quick pickups and a seamless listing process."/>
-                <CaptionAndContentCard
-                    childCaption="For Buyers"
-                    childContent="Find unique, sustainable materials for your next project -- big or small."/>
+                {
+                    [{
+                        heading: "Why Offcuts?",
+                        content: [
+                            "Sustainable Solutions: Divert construction waste from landfills while supporting eco-friendly practices.",
+                            "Affordable Materials: Access high-quality reclaimed materials at a fraction of the cost.",
+                            "Fast & Easy: List, buy, or request lefttover materials with ease."
+                        ]
+                    }, {
+                        heading: "For Contractors",
+                        content: [
+                            "Turn your surplus into profit with quick pickups and a seamless listing process."
+                        ]
+                    }, {
+                        heading: "For Buyers",
+                        content: [
+                            "Find unique, sustainable materials for your next project -- big or small."
+                        ]
+                    }].map(card => {
+                        return <>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "start",
+                                    alignItems: "center",
+                                    width: "100%",
+                                    height: "auto",
+                                    flex: 1,
+                                    padding: 32
+                                }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "start",
+                                        alignItems: "center",
+                                        width: "100%",
+                                        height: "auto",
+                                        flex: 1,
+                                        color: Theme.SP_COLOR,
+                                        fontSize: "2em",
+                                        fontWeight: "normal",
+                                        fontFamily: Theme.FONT_0
+                                    }}>
+                                    { card.heading }
+                                </div>
+                                {
+                                    card.content.map(content => {
+                                        return <>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    color: Theme.DK_COLOR,
+                                                    fontSize: "0.75em",
+                                                    fontWeight: "normal",
+                                                    fontFamily: Theme.FONT_1,
+                                                    paddingTop: 8,
+                                                    paddingBottom: 8,
+                                                    textAlign: "left"
+                                                }}>
+                                                { content }
+                                            </div>
+                                        </>;
+                                    })
+                                }
+                            </div>
+                        </>;
+                    })
+                }
             </div>
         </ResponsiveAnchorPage>
-    </>;
-}
-
-
-export type HomePageSubHeadingTagProps = {
-    children: ReactNode;
-};
-
-export function HomePageSubHeadingTag({ children }: HomePageSubHeadingTagProps): ReactNode {
-    return <>
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: "2em",
-                fontWeight: "normal",
-                fontFamily: Theme.FONT_1,
-                color: Theme.SP_COLOR
-            }}>
-            { children }
-        </div>
-    </>;
-}
-
-
-export type HomePageCardProps = {
-    children?: ReactNode;
-};
-
-export function HomePageCard({ children }: HomePageCardProps): ReactNode {
-    return <>
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "start",
-                alignItems: "center"
-            }}>
-            { children }
-        </div>
-    </>;
-}
-
-
-export type HomePageCardCaptionProps = {
-    children?: ReactNode;
-};
-
-export function HomePageCardCaption({ children }: HomePageCardCaptionProps): ReactNode {
-    return <>
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: "2em",
-                fontWeight: "normal",
-                fontFamily: Theme.FONT_1,
-                color: Theme.SP_COLOR
-            }}>
-            { children }
-        </div>
     </>;
 }

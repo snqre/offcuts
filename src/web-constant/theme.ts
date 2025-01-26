@@ -1,6 +1,6 @@
 import * as Constant from "@web-constant";
 
-export const FONT_0: string = "Cocogoose Compressed Trial";
+export const FONT_0: string = "Konkhmer Sleokchher";
 export const FONT_1: string = "Core Sans A";
 export const MONOSPACE_FONT: string = "Maria";
 export const SP_COLOR: string = Constant.ColorPalette.OFFCUT_YELLOW;

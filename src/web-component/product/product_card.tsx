@@ -47,41 +47,52 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                 }}
                 { ... more }>
                 { /** Image */ }
-                <Link
-                    style={{
-                        display: "contents"
-                    }}
+                <div
                     onClick={
-                        () => Client.setProductFocus(product.name)
+                        async () => await Client.setProductFocus((product.name))
                     }
-                    to={
-                        "/product"
-                    }>
-                    <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                        flex: 4
+                    }}>
+                    <Link
                         style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundImage: `url(${ product.imageUrl ?? placeholderImage })`,
-                            backgroundSize: "cover",
-                            backgroundPositionX: "center",
-                            backgroundPositionY: "center",
-                            backgroundRepeat: "no-repeat",
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            width: "100%",
-                            height: "100%",
-                            flex: 4
-                        }}>
+                            display: "contents"
+                        }}
+                        to={
+                            "/product"
+                        }>
                         <div
                             style={{
-
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                backgroundImage: `url(${ product.imageUrl ?? placeholderImage })`,
+                                backgroundSize: "cover",
+                                backgroundPositionX: "center",
+                                backgroundPositionY: "center",
+                                backgroundRepeat: "no-repeat",
+                                borderRadius: 10,
+                                cursor: "pointer",
+                                width: "100%",
+                                height: "100%",
+                                flex: 4
                             }}>
+                            <div
+                                style={{
 
+                                }}>
+
+                            </div>
                         </div>
-                    </div>
-                </Link>
+                    </Link>
+                </div>
                 { /** Header */ }
                 <div
                     style={{

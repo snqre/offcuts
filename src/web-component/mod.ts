@@ -17,6 +17,7 @@ export * from "./nav/nav_logo";
 export * from "./nav/nav_search_bar";
 export * from "./nav/nav_sign_in_form";
 export * from "./nav/nav_sign_in_sign_up_button";
+export * from "./nav/nav_suggestion";
 export * from "./nav/nav_sign_up_form";
 export * from "./nav/nav_tags_drop_down_button";
 export * from "./nav/nav";

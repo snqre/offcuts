@@ -24,7 +24,6 @@ export function ClientProduct(
 
     async function set(name: string): Promise<void> {
         require(await Server.hasProduct(name), "CLIENT_PRODUCT.ERR_PRODUCT_NOT_FOUND");
-        let i: bigint = 0n;
         _name = name;
         return;
     }

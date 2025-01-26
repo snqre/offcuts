@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import type { ComponentPropsWithRef } from "react";
+import { NavSuggestion } from "@web-component";
 import { Theme } from "@web-constant";
 import { ProductData } from "@common";
 import { Server } from "@web-server";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useEffect } from "react";
 import { get } from "fast-levenshtein";
 
@@ -113,26 +114,21 @@ export function NavSearchBar(props: NavSearchBarProps): ReactNode {
                             width: "100%",
                             height: "auto",
                             flex: 1,
-                            boxShadow: Theme.SHADOW
+                            boxShadow: Theme.SHADOW,
+                            background: "white"
                         }}>
                         { /** suggestion */ }
                         { suggestions.map(suggestion => <>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    width: "100%",
-                                    height: "auto",
-                                    flex: 1,
-                                    padding: 10,
-                                    gap: 10
-                                }}>
-                                <div>{ suggestion.name }</div>
-                                <div>{ suggestion.price }</div>
-                                <div>{ suggestion.stock }</div>
-                            </div>
+                            <NavSuggestion
+                                name={
+                                    suggestion.name
+                                }
+                                price={
+                                    suggestion.price
+                                }
+                                stock={
+                                    suggestion.stock
+                                }/>
                         </>) }
                     </div>
                 </> : undefined }
