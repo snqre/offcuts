@@ -82,6 +82,7 @@ export function BasketPage(): ReactNode {
                                 })]
                             }/>
                     </div>
+                    { /** Checkout Form */ }
                     <div
                         style={{
                             display: "flex",
@@ -92,6 +93,7 @@ export function BasketPage(): ReactNode {
                             height: "100%",
                             flex: 1
                         }}>
+
                         <div
                             style={{
                                 display: "flex",

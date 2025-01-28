@@ -24,6 +24,7 @@ export function Form(props: FormProps): ReactNode {
                 padding: 20,
                 borderRadius: 5,
                 gap: 20,
+                background: "white",
                 ... style
             }}
             { ... more }>
