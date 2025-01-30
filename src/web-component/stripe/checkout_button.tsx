@@ -45,7 +45,9 @@ export function CheckoutButton(): ReactNode {
                     color: Theme.LT_COLOR,
                     padding: 10,
                     borderRadius: 5,
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    width: "100%",
+                    height: "auto"
                 }}>
                 Pay Now
             </button>

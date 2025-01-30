@@ -93,7 +93,7 @@ export function BasketPage(): ReactNode {
                             height: "100%",
                             flex: 1
                         }}>
-
+                        
                         <div
                             style={{
                                 display: "flex",
@@ -102,7 +102,11 @@ export function BasketPage(): ReactNode {
                                 alignItems: "center",
                                 fontSize: "1em",
                                 fontWeight: "normal",
-                                fontFamily: Theme.FONT_1
+                                fontFamily: Theme.FONT_1,
+                                width: "100%",
+                                height: "auto",
+                                paddingTop: 16,
+                                paddingBottom: 16
                             }}>
                             Total: £{ cost.toPrecision(3) }
                         </div>
