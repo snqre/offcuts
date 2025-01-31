@@ -27,7 +27,7 @@ export function Server(): Server {
         let store: Store = Store(redis);
         let checkoutApiKey: string | undefined = process.env?.["STRIPE_INT_TEST_KEY"];
         require(checkoutApiKey !== undefined, "SERVER.ERR_STRIPE_INT_TEST_KEY_REQUIRED");
-        let port: number = 8080;
+        let port: number = 3000;
         let socket: HttpServer = Express()
             .use(Express.static(join(__dirname, "web")))
             .use(Express.json())
