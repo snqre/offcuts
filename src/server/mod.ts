@@ -1,5 +1,6 @@
 export * from "./auth/auth";
 export * from "./db/database";
+export * from "./db/surreal/surreal";
 export * from "./db/redis/redis_socket_adaptor";
 export * from "./db/redis/redis";
 export * from "./misc/store";

@@ -14,6 +14,8 @@
 		"typescript": "^5.0.0"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@mui/material": "^6.4.5",
 		"@stripe/stripe-js": "^5.5.0",
 		"@types/bcrypt": "5.0.2",
 		"@types/express": "5.0.0",
@@ -22,10 +24,14 @@
 		"bcrypt": "5.1.1",
 		"express": "4.21.2",
 		"fast-levenshtein": "3.0.0",
+		"firebase": "^11.3.1",
+		"mongodb": "^6.13.1",
+		"mui-image-slider": "^1.0.10",
 		"recraft": "0.1.0",
 		"redis": "4.7.0",
 		"reliq": "1.2.2",
 		"stripe": "^17.5.0",
+		"surrealdb": "^1.2.1",
 		"validator": "13.12.0",
 		"zod": "3.24.1"
 	}

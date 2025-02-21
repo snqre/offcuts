@@ -29,7 +29,7 @@ export function BuildScript(): BuildScript {
             entry: ["src/server/server.ts"],
             format: "cjs",
             outDir: "target/node",
-            minify: true,
+            minify: false,
             tsconfig: "tsconfig",
             platform: "node"
         });
@@ -41,7 +41,7 @@ export function BuildScript(): BuildScript {
         let output = await Bun.build({
             entrypoints: ["src/web/app.tsx"],
             format: "esm",
-            minify: true,
+            minify: false,
             outdir: "target/node/web",
             sourcemap: "inline"
         });

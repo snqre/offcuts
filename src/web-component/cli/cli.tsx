@@ -11,7 +11,7 @@ import { useEffect } from "react";
 const _LINE_SYMBOL: string = ">";
 
 export type CliNativeProps = {
-    execute: AsyncFunction<Array<string>, string | undefined>;
+    execute: AsyncFunction<Array<string>, string | Array<string> | null>;
 };
 
 export type CliProps = 
@@ -98,7 +98,18 @@ export function Cli(props: CliProps): ReactNode {
                                     setInput("@admin ");
                                     setLast(last => [... last, command]);
                                     execute((command.split(" ")))
-                                        .then(response => response ? setLast(last => [... last, `${ response }`]) : undefined)
+                                        .then(response => {
+                                            if (!response) {
+                                                setLast(last => [...last, "OK"]);
+                                                return;
+                                            } 
+                                            if (typeof response === "string") {
+                                                setLast(last => [...last, response]);
+                                                return;
+                                            }
+                                            response.map(line => setLast(last => [...last, line]));
+                                            return;
+                                        })
                                         .catch(e => [... last, `${ e }`]);
                                     return;
                                 }

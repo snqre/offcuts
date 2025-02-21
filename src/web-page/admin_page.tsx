@@ -35,14 +35,20 @@ export function AdminPage(): ReactNode {
                     execute={
                         async args => {
                             args.shift();
-                            
                             if (args[0] === "help") {
-                                return ""
-                                    + "\n" + "Commands"
-                                    + "\n" + "1. tags"
-                                    + "\n" + "2. tags -> TEST"
-                                    + "\n" + "3. products"
-                                    + "\n" + "4. list-product PASSWORD PRICE STOCK TAG"
+                                return [
+                                    "Commands",
+                                    "tags",
+                                    "tags -> *tag",
+                                    "products",
+                                    "list_product *admin_password *product_name *product_price *product_stock *product_tag",
+                                    "delist_product *admin_password *product_name",
+                                    "increase_stock *admin_password *product_name *amount_increased",
+                                    "decrease_stock *admin_password *product_name *amount_decreased",
+                                    "users *admin_password",
+                                    "create_user *admin_password *username *user_password",
+                                    "delete_user *admin_password *username"
+                                ];
                             }
 
                             /** @command */
@@ -131,6 +137,10 @@ export function AdminPage(): ReactNode {
                                 catch (e) {
                                     return String(e);
                                 }
+                            }
+
+                            else if (args[0] === "users") {
+                                
                             }
 
                             return "UNRECOGNIZED_COMMAND";

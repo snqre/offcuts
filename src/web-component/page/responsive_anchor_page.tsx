@@ -7,43 +7,9 @@ import { useDevice } from "@web-hook";
 export type ResponsiveAnchorPageProps =
     & ComponentPropsWithRef<"div">
     & {};
-export function ResponsiveAnchorPage(props: ResponsiveAnchorPageProps): ReactNode {
+export function ResponsiveAnchorPage(props: ResponsiveAnchorPage.Props): ReactNode {
     let { style, children, ... more } = props;
     let device: Device = useDevice();
-    let wrapper$: ComponentPropsWithRef<"div"> = {
-        style: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "start",
-            alignItems: "center",
-            width: "100vw",
-            height: "100vh",
-            background: "white",
-            ... style
-        },
-        ... more
-    };
-    let innerWrapper$: ComponentPropsWithRef<"div"> = {
-        style: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "start",
-            alignItems: "center",
-            width: size(),
-            height: "100%"
-        }
-    };
-    let contentWrapper$: ComponentPropsWithRef<"div"> = {
-        style: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            flexGrow: 1,
-            width: "100%",
-            height: "100%"
-        }
-    };
 
     function size(): number {
         if (device === "DEVICE.LAPTOP") return 1024;
@@ -53,13 +19,51 @@ export function ResponsiveAnchorPage(props: ResponsiveAnchorPageProps): ReactNod
     }
 
     return <>
-        <div { ... wrapper$ }>
-            <div { ... innerWrapper$ }>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "start",
+                alignItems: "center",
+                width: "100vw",
+                height: "100vh",
+                background: "white",
+                ...style
+            }}
+            { ...more }>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "start",
+                    alignItems: "center",
+                    minWidth: 1024,
+                    maxWidth: 1440,
+                    width: "100%",
+                    height: "100%",
+                    flex: 1,
+                    paddingLeft: 64,
+                    paddingRight: 64
+                }}>
                 <Nav/>
-                <div { ... contentWrapper$ }>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexGrow: 1,
+                        width: "100%",
+                        height: "100%"
+                    }}>
                     { children }
                 </div>
             </div>
         </div>
     </>;
+}
+
+export namespace ResponsiveAnchorPage {
+    export type Props = 
+        & ComponentPropsWithRef<"div">;
 }

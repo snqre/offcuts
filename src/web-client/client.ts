@@ -20,7 +20,7 @@ export type Client = {
     removeProductFromShoppingCart(name: string, amount: bigint): void;
     signIn(): Promise<UserData>;
     signIn(username: string, password: string): Promise<UserData>;
-    signUp(user: UserData): Promise<void>;
+    signUp(username: string, password: string): Promise<void>;
 };
 
 export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomTag, _product: ClientProduct, _user: ClientUserDriver) => {
@@ -103,7 +103,7 @@ export const Client: Client = ((_cart: ClientShoppingCart, _tag: ClientShowRoomT
         else return await _user.signIn();
     }
 
-    async function signUp(user: UserData): Promise<void> {
-        return await _user.signUp(user);
+    async function signUp(username: string, password: string): Promise<void> {
+        return (await _user.signUp(username, password));
     }
 })(ClientShoppingCart(), ClientShowRoomTag(null), ClientProduct(null), ClientUserDriver());

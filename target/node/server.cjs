@@ -1,1 +1,738 @@
-"use strict";var me=Object.create;var P=Object.defineProperty;var ce=Object.getOwnPropertyDescriptor;var de=Object.getOwnPropertyNames;var Re=Object.getPrototypeOf,Ee=Object.prototype.hasOwnProperty;var Ae=(e,i)=>{for(var n in i)P(e,n,{get:i[n],enumerable:!0})},V=(e,i,n,r)=>{if(i&&typeof i=="object"||typeof i=="function")for(let t of de(i))!Ee.call(e,t)&&t!==n&&P(e,t,{get:()=>i[t],enumerable:!(r=ce(i,t))||r.enumerable});return e};var h=(e,i,n)=>(n=e!=null?me(Re(e)):{},V(i||!e||!e.__esModule?P(n,"default",{value:e,enumerable:!0}):n,e)),fe=e=>V(P({},"__esModule",{value:!0}),e);var Ie={};Ae(Ie,{Server:()=>pe});module.exports=fe(Ie);var N=h(require("express"),1);var C=require("bcrypt"),F=require("bcrypt"),g=require("reliq"),B=64,le=0,Se=256;function _e(e=B){let i;return(0,g.require)(e>=le,"AUTH.ERR_ASSIGNED_SALT_CANNOT_BE_BELOW_THE_CONSTANT_MINIMUM"),(0,g.require)(e<=Se,"AUTH.ERR_ASSIGNED_SALT_CANNOT_BE_ABOVE_THE_CONSTANT_MAXIMUM"),{get:n,set:r,setByEncryption:t,decrypt:a};function n(...[]){return(0,g.require)(i!==void 0,"AUTH.ERR_UNASSIGNED_HASH"),i}function r(...[o]){(0,g.require)(o.trim().length!==0,"AUTH.ERR_INVALID_HASH"),i=o}async function t(...[o]){(0,g.require)(o.trim().length!==0,"AUTH.ERR_INVALID_PASSWORD"),i=await(0,C.hash)(o,e)}async function a(...[o]){return await(0,F.compare)(o,i)}}async function G(e,i=B){let n;return n=_e(i),await n.setByEncryption(e),{...n}}var O=require("zod"),b=O.z.object({username:O.z.string().min(1),hash:O.z.string().min(1)});var A=require("zod"),f=A.z.object({name:A.z.string().min(1).refine(e=>e.trim().length>0),price:A.z.number().min(0).finite(),stock:A.z.number().min(0).finite().int(),tags:A.z.array(A.z.string().min(1)),imageUrl:A.z.string().min(1).optional()});var w=require("zod");var x=w.z.object({product:f,amount:w.z.number().min(1).int()});var U=h(require("validator"),1),l=require("zod");var I=l.z.object({username:l.z.string().min(1),hash:l.z.string().min(1),orders:l.z.array(x),email:l.z.string().optional().refine(e=>e?U.default.isEmail(e):!0),phoneNumber:l.z.string().optional().refine(e=>e?U.default.isMobilePhone(e):!0),address:l.z.string().optional().refine(e=>e?e.trim().length>0:!0)});var y=require("zod");var De=y.z.object({admins:y.z.array(b),users:y.z.array(I),products:y.z.array(f)});var ge=require("reliq");var ye=require("reliq");var Te=require("reliq");var Pe=require("reliq");var he=require("reliq");var k=h(require("validator"),1);var _=require("reliq");function K(e){return(0,_.require)(e.username.trim().length!==0,"USER_DATA.ERR_INVALID_USERNAME"),(0,_.require)(e.hash.trim().length!==0,"USER_DATA.ERR_INVALID_HASH"),(0,_.require)(e.email?k.default.isEmail(e.email):!0,"USER_DATA.ERR_INVALID_EMAIL"),(0,_.require)(e.phoneNumber?k.default.isMobilePhone(e.phoneNumber):!0,"USER_DATA.ERR_INVALID_PHONE_NUMBER"),(0,_.require)(e.address?e.address.trim().length!==0:!0,"USER_DATA.ERR_INVALID_ADDRESS"),(0,_.require)(Oe(e),"USER_DATA.ERR_SCHEMA_VALIDATION_FAILED"),e}function Oe(e){return I.safeParse(e).success}var H=require("redis"),T=require("reliq");async function X(e,i,n){let r;return(0,T.require)(e.trim().length!==0,"REDIS_SOCKET_ADAPTOR.ERR_INVALID_HOST"),(0,T.require)(n>=0n,"REDIS_SOCKET_ADAPTOR.ERR_INVALID_PORT"),(0,T.require)(n<=9e4,"REDIS_SOCKET_ADAPTOR.ERR_INVALID_PORT"),(0,T.require)(i.trim().length!==0,"REDIS_SOCKET_ADAPTOR.ERR_INVALID_PASSWORD"),r=(0,H.createClient)({password:i,socket:{host:e,port:Number(n)}}),await r.connect(),r}var q=require("reliq");async function Z(e,i){return(0,q.require)(i.trim().length!==0,"REDIS.ERR_INVALID_KEY"),{get:n,set:r,disconnect:t};async function n(...[]){let o=await e.get(i);return o==null&&(o=JSON.stringify(a())),JSON.parse(o)}async function r(...[o]){let R=JSON.stringify(o);await e.set(i,R)}async function t(...[]){await e.quit()}function a(){return{admins:[],users:[],products:[]}}}var d=require("reliq");function W(e){return{products:i,setStock:n,increaseStock:r,decreaseStock:t,setPrice:a,increasePrice:o,decreasePrice:R,listProduct:S,delistProduct:D};async function i(u){let s=await e.get();if(u){let m=[],p=0n;for(;p<s.products.length;){let c=s.products[Number(p)];c.name===u&&m.push(c),p++}return m}return s.products}async function n(u,s){(0,d.require)(u.trim().length!==0,"STORE.ERR_INVALID_NAME"),(0,d.require)(s>=0n,"STORE.ERR_AMOUNT_BELOW_ZERO");let m=await e.get(),p=0n;for(;p<m.products.length;){let c=m.products[Number(p)];c.name===u&&(c.stock=Number(s)),p++}await e.set(m)}async function r(u,s){(0,d.require)(u.trim().length!==0,"STORE.ERR_INVALID_NAME"),(0,d.require)(s>=0n,"STORE.ERR_AMOUNT_BELOW_ZERO");let m=await e.get(),p=0n;for(;p<m.products.length;){let c=m.products[Number(p)];c.name===u&&(c.stock+=Number(s)),p++}await e.set(m)}async function t(u,s){(0,d.require)(u.trim().length!==0,"STORE.ERR_INVALID_NAME"),(0,d.require)(s>=0n,"STORE.ERR_AMOUNT_BELOW_ZERO");let m=await e.get(),p=0n;for(;p<m.products.length;){let c=m.products[Number(p)];c.name===u&&((0,d.require)(c.stock-Number(s)>0,"STORE.ERR_INSUFFICIENT_STOCK"),c.stock-=Number(s)),p++}await e.set(m)}async function a(u,s){(0,d.require)(u.trim().length!==0,"STORE.ERR_INVALID_NAME"),(0,d.require)(s>=0,"STORE.ERR_AMOUNT_BELOW_ZERO"),(0,d.require)(s<=Number.MAX_SAFE_INTEGER,"STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");let m=await e.get(),p=0n;for(;p<m.products.length;){let c=m.products[Number(p)];c.name===u&&(c.stock=s),p++}await e.set(m)}async function o(u,s){(0,d.require)(u.trim().length!==0,"STORE.ERR_INVALID_NAME"),(0,d.require)(s>=0,"STORE.ERR_AMOUNT_BELOW_ZERO"),(0,d.require)(s<=Number.MAX_SAFE_INTEGER,"STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");let m=await e.get(),p=0n;for(;p<m.products.length;){let c=m.products[Number(p)];c.name===u&&((0,d.require)(c.price+s<=Number.MAX_SAFE_INTEGER,"STORE.ERR_PRICE_ABOVE_MAX_SAFE_INTEGER"),c.price+=s),p++}await e.set(m)}async function R(u,s){(0,d.require)(u.trim().length!==0,"STORE.ERR_INVALID_NAME"),(0,d.require)(s>=0,"STORE.ERR_AMOUNT_BELOW_ZERO"),(0,d.require)(s<=Number.MAX_SAFE_INTEGER,"STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");let m=await e.get(),p=0n;for(;p<m.products.length;){let c=m.products[Number(p)];c.name===u&&((0,d.require)(c.price-s>=0,"STORE.ERR_PRICE_BELOW_ZERO"),c.price-=s),p++}await e.set(m)}async function S(u){let s=await e.get();s.products.push(u),await e.set(s)}async function D(u){let s;typeof u=="string"?s=u:s=u.name;let m=await e.get(),p=0n;for(;p<m.products.length;)m.products[Number(p)].name===s&&m.products.splice(Number(p),1),p++}}var Ot=require("stripe");function Q(e){return{quantity:Number(e.amount),price_data:{currency:"gbp",unit_amount:e.product.price,product_data:{name:e.product.name,description:e.product.name}}}}var xt=require("stripe");var j=require("reliq");function Y(e){return{receive:i};async function i(r,t,a,o){let R=await e.checkout.sessions.create({payment_method_types:["card"],line_items:[...t.map(s=>Q(s))||[]],mode:"payment",success_url:r+"/",cancel_url:r+"/"}),S=R.url;(0,j.require)(S!==null,"STRIPE_PAYMENT_PROVIDER.ERR_MISSING_SESSION_URL");let D=R.id,u=setInterval(async()=>{let s=await e.checkout.sessions.retrieve(D),m=s.payment_status==="paid"||s.status==="complete";if(s.status==="expired"){clearInterval(u),o(s);return}else if(m){clearInterval(u),a(s);return}},n(9));return setTimeout(async()=>{clearInterval(u);let s=await e.checkout.sessions.retrieve(D);o(s)},n(3600)),S}function n(r){return r*1e3}}var z=h(require("stripe"),1),J=require("reliq");function $(e){return(0,J.require)(e.trim().length!==0,"STRIPE_SOCKET_ADAPTOR.ERR_INVALID_API_KEY"),new z.default(e)}var ee=require("express");var Zt=require("zod");function te(e,i){return(0,ee.Router)().post("/checkout",async(n,r)=>{try{let{orders:t}=n.body;if(t.length===0){r.send({message:"NO_ORDERS"});return}t.forEach(u=>{u.product.price*=100});let o=`http://${n.headers.host}`,R=$(e),D=await Y(R).receive(o,t,u=>{console.log("Purchase successful"),t.forEach(async s=>{await i.decreaseStock(s.product.name,BigInt(s.amount))})},u=>{console.log("Purchase expired.")});r.send({url:D});return}catch(t){r.send({e:t});return}})}var re=require("express"),L=require("reliq");function oe(e,i){return(0,L.require)(e.trim().length!==0,"REACT_ROUTER.ERR_INVALID_ROUTE"),(0,L.require)(e.startsWith("/"),"REACT_ROUTER.ERR_INVALID_ROUTE"),(0,re.Router)().get(e,(n,r)=>r.sendFile(i))}var ne=require("express");var E=require("zod"),$t=require("reliq");function ie(e){return(0,ne.Router)().get("/store/products",async(n,r)=>{try{r.send({products:await e.products()});return}catch(t){console.error(t),r.send({e:t});return}}).get("/store/products-by-name",async(n,r)=>{try{let{name:t}=n.body;if(!(t!=null&&typeof t=="string")){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}r.send({products:await e.products(t)});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/set-stock",async(n,r)=>{try{let t=E.z.object({password:E.z.string().refine(R=>i(R)),name:E.z.string(),amount:E.z.number()}).parse(n.body),{name:a,amount:o}=t;await e.setStock(a,BigInt(o)),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/increase-stock",async(n,r)=>{try{let t=E.z.object({password:E.z.string().refine(R=>i(R)),name:E.z.string(),amount:E.z.number()}).parse(n.body),{name:a,amount:o}=t;await e.increaseStock(a,BigInt(o)),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/decrease-stock",async(n,r)=>{try{let{password:t,name:a,amount:o}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&a!==null&&a!==void 0&&typeof a=="string"&&o!==null&&o!==void 0&&typeof o=="number"&&o>=0&&o<=Number.MAX_SAFE_INTEGER&&Number.isSafeInteger(o))){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.decreaseStock(a,BigInt(o)),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/set-price",async(n,r)=>{try{let{password:t,name:a,amount:o}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&a!==null&&a!==void 0&&typeof a=="string"&&o!==null&&o!==void 0&&typeof o=="number"&&o>=0&&o<=Number.MAX_SAFE_INTEGER&&Number.isSafeInteger(o))){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.setPrice(a,o),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/increase-price",async(n,r)=>{try{let{password:t,name:a,amount:o}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&a!==null&&a!==void 0&&typeof a=="string"&&o!==null&&o!==void 0&&typeof o=="number"&&o>=0&&o<=Number.MAX_SAFE_INTEGER&&Number.isSafeInteger(o))){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.increasePrice(a,o),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/decrease-price",async(n,r)=>{try{let{password:t,name:a,amount:o}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&a!==null&&a!==void 0&&typeof a=="string"&&o!==null&&o!==void 0&&typeof o=="number"&&o>=0&&o<=Number.MAX_SAFE_INTEGER&&Number.isSafeInteger(o))){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.decreasePrice(a,o),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/list-product",async(n,r)=>{try{let{password:t,product:a}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&f.safeParse(a).success)){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.listProduct(a),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/delist-product-by-name",async(n,r)=>{try{let{password:t,name:a}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&a!==null&&a!==void 0&&typeof a=="string")){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.delistProduct(a),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}}).post("/store/delist-product-by-product",async(n,r)=>{try{let{password:t,product:a}=n.body;if(!(t!=null&&typeof t=="string"&&i(t)&&f.safeParse(a).success)){r.send({message:"STORE_ROUTER.ERR_INVALID_REQUEST"});return}await e.delistProduct(a),r.send({message:"OK"});return}catch(t){console.error(t),r.send({e:t});return}});function i(n){let r=process.env?.ADMIN_PASSWORD;return r===void 0||r.trim().length===0?!1:r===n}}var ae=require("express");var se=require("reliq");function ue(e){return(0,ae.Router)().post("/sign-up",async(i,n)=>{try{let{username:r,password:t}=i.body,a=await e.get(),o=a.users.filter(S=>S.username===r).length!==0;(0,se.require)(o===!1,"USER_ROUTER.USERNAME_ALREADY_TAKEN"),a.users.push(K({username:r,hash:(await G(t)).get(),orders:[]})),await e.set(a),n.send({message:"OK"});return}catch(r){n.send({e:r});return}}).post("/sign-in",async(i,n)=>{})}var M=require("reliq"),v=require("path");function pe(){return{run:e};async function e(...[]){let i=process.env?.REDIS_INT_KEY;(0,M.require)(i!==void 0,"SERVER.ERR_REDIS_INT_KEY_REQUIRED");let n=await X("redis-15540.c85.us-east-1-2.ec2.redns.redis-cloud.com",i,15540n),r=await Z(n,"*"),t=W(r),a=process.env?.STRIPE_INT_TEST_KEY;(0,M.require)(a!==void 0,"SERVER.ERR_STRIPE_INT_TEST_KEY_REQUIRED");let o=3e3,R=(0,N.default)().use(N.default.static((0,v.join)(__dirname,"web"))).use(N.default.json()).use(oe("/",(0,v.join)(__dirname,"web/app.html"))).use(ie(t)).use(te(a,t)).use(ue(r)).listen(o);console.log("SERVER.RUNNING",__dirname,o)}}pe().run();0&&(module.exports={Server});
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+
+// src/server/auth/auth.ts
+var import_bcrypt = require("bcrypt");
+var import_bcrypt2 = require("bcrypt");
+var import_reliq = require("reliq");
+
+// src/common/admin_data_schema.ts
+var import_zod = require("zod");
+var AdminDataSchema = import_zod.z.object({
+  username: import_zod.z.string().min(1),
+  hash: import_zod.z.string().min(1)
+});
+
+// src/common/product_data_schema.ts
+var import_zod2 = require("zod");
+var ProductDataSchema = import_zod2.z.object({
+  name: import_zod2.z.string().min(1).refine((x) => x.trim().length > 0),
+  price: import_zod2.z.number().min(0).finite(),
+  stock: import_zod2.z.number().min(0).finite().int(),
+  tags: import_zod2.z.array(import_zod2.z.string().min(1)),
+  imageUrl: import_zod2.z.string().min(1).optional()
+});
+
+// src/common/order_data_schema.ts
+var import_zod3 = require("zod");
+var OrderDataSchema = import_zod3.z.object({
+  product: ProductDataSchema,
+  amount: import_zod3.z.number().min(1).int()
+});
+
+// src/common/user_data_schema.ts
+var import_validator = __toESM(require("validator"), 1);
+var import_zod4 = require("zod");
+var UserDataSchema = import_zod4.z.object({
+  username: import_zod4.z.string().min(1),
+  hash: import_zod4.z.string().min(1),
+  orders: import_zod4.z.array(OrderDataSchema),
+  email: import_zod4.z.string().optional().refine((x) => x ? import_validator.default.isEmail(x) : true),
+  phoneNumber: import_zod4.z.string().optional().refine((x) => x ? import_validator.default.isMobilePhone(x) : true),
+  address: import_zod4.z.string().optional().refine((x) => x ? x.trim().length > 0 : true)
+});
+
+// src/common/app_data_schema.ts
+var import_zod5 = require("zod");
+var AppDataSchema = import_zod5.z.object({
+  admins: import_zod5.z.array(AdminDataSchema),
+  users: import_zod5.z.array(UserDataSchema),
+  products: import_zod5.z.array(ProductDataSchema)
+});
+
+// src/common/admin_data.ts
+var import_reliq2 = require("reliq");
+
+// src/common/app_data.ts
+var import_reliq3 = require("reliq");
+
+// src/common/loop.ts
+var import_reliq4 = require("reliq");
+var _MAX_ITER = 2000000n;
+var Loop = (() => {
+  {
+    return { checkMaxIter };
+  }
+  function checkMaxIter(...[length]) {
+    (0, import_reliq4.require)(length <= _MAX_ITER, "LOOP.ERR_LENGTH_ABOVE_MAX_ITER");
+    (0, import_reliq4.require)(length >= 0, "LOOP.ERR_LENGTH_BELOW_ZERO");
+    return;
+  }
+})();
+
+// src/common/order_data.ts
+var import_reliq5 = require("reliq");
+
+// src/common/product_data.ts
+var import_reliq6 = require("reliq");
+
+// src/common/user_data.ts
+var import_validator2 = __toESM(require("validator"), 1);
+var import_reliq7 = require("reliq");
+function UserData(_instance) {
+  {
+    (0, import_reliq7.require)(_instance.username.trim().length !== 0, "USER_DATA.ERR_INVALID_USERNAME");
+    (0, import_reliq7.require)(_instance.hash.trim().length !== 0, "USER_DATA.ERR_INVALID_HASH");
+    (0, import_reliq7.require)(_instance.email ? import_validator2.default.isEmail(_instance.email) : true, "USER_DATA.ERR_INVALID_EMAIL");
+    (0, import_reliq7.require)(_instance.phoneNumber ? import_validator2.default.isMobilePhone(_instance.phoneNumber) : true, "USER_DATA.ERR_INVALID_PHONE_NUMBER");
+    (0, import_reliq7.require)(_instance.address ? _instance.address.trim().length !== 0 : true, "USER_DATA.ERR_INVALID_ADDRESS");
+    (0, import_reliq7.require)(isUserData(_instance), "USER_DATA.ERR_SCHEMA_VALIDATION_FAILED");
+    return _instance;
+  }
+}
+function isUserData(unknown) {
+  return UserDataSchema.safeParse(unknown).success;
+}
+
+// src/server/db/surreal/surreal.ts
+var import_app = require("firebase/app");
+async function Firebase() {
+  const config = {
+    apiKey: process.env?.["FIREBASE_API_KEY"],
+    authDomain: "offcut-61d2b.firebaseapp.com",
+    projectId: "offcut-61d2b",
+    storageBucket: "offcut-61d2b.firebasestorage.app",
+    messagingSenderId: "888767606623",
+    appId: "1:888767606623:web:40b266fbe6dc542c3910ea",
+    measurementId: "G-HVQTWMQ051"
+  };
+  const app = (0, import_app.initializeApp)(config);
+}
+Firebase();
+
+// src/server/db/redis/redis_socket_adaptor.ts
+var import_redis = require("redis");
+var import_reliq8 = require("reliq");
+async function RedisSocketAdaptor(_host, _password, _port) {
+  let _instance;
+  {
+    (0, import_reliq8.require)(_host.trim().length !== 0, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_HOST");
+    (0, import_reliq8.require)(_port >= 0n, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_PORT");
+    (0, import_reliq8.require)(_port <= 9e4, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_PORT");
+    (0, import_reliq8.require)(_password.trim().length !== 0, "REDIS_SOCKET_ADAPTOR.ERR_INVALID_PASSWORD");
+    let n = _port;
+    _instance = (0, import_redis.createClient)({
+      password: _password,
+      socket: {
+        host: _host,
+        port: Number(n)
+      }
+    });
+    await _instance.connect();
+    return _instance;
+  }
+}
+
+// src/server/db/redis/redis.ts
+var import_reliq9 = require("reliq");
+async function Redis(_socket, _key) {
+  {
+    (0, import_reliq9.require)(_key.trim().length !== 0, "REDIS.ERR_INVALID_KEY");
+    return { get, set, disconnect };
+  }
+  async function get(...[]) {
+    let response = await _socket.get(_key);
+    if (response === null || response === void 0) {
+      response = JSON.stringify(_empty());
+    }
+    let data = JSON.parse(response);
+    return data;
+  }
+  async function set(...[data]) {
+    let cargo = JSON.stringify(data);
+    await _socket.set(_key, cargo);
+    return;
+  }
+  async function disconnect(...[]) {
+    await _socket.quit();
+    return;
+  }
+  function _empty() {
+    return {
+      admins: [],
+      users: [],
+      products: []
+    };
+  }
+}
+
+// src/server/misc/store.ts
+var import_reliq10 = require("reliq");
+function Store(_db) {
+  {
+    return {
+      products,
+      setStock,
+      increaseStock,
+      decreaseStock,
+      setPrice,
+      increasePrice,
+      decreasePrice,
+      listProduct,
+      delistProduct
+    };
+  }
+  async function products(name) {
+    let app = await _db.get();
+    if (name) {
+      let result = [];
+      let i = 0n;
+      while (i < app.products.length) {
+        let product = app.products[Number(i)];
+        if (product.name === name) result.push(product);
+        i++;
+      }
+      return result;
+    }
+    return app.products;
+  }
+  async function setStock(name, amount) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) product.stock = Number(amount);
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function increaseStock(name, amount) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) product.stock += Number(amount);
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function decreaseStock(name, amount) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0n, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) {
+        (0, import_reliq10.require)(product.stock - Number(amount) > 0, "STORE.ERR_INSUFFICIENT_STOCK");
+        product.stock -= Number(amount);
+      }
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function setPrice(name, amount) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    (0, import_reliq10.require)(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) product.stock = amount;
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function increasePrice(name, amount) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    (0, import_reliq10.require)(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) {
+        (0, import_reliq10.require)(product.price + amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_PRICE_ABOVE_MAX_SAFE_INTEGER");
+        product.price += amount;
+      }
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function decreasePrice(name, amount) {
+    (0, import_reliq10.require)(name.trim().length !== 0, "STORE.ERR_INVALID_NAME");
+    (0, import_reliq10.require)(amount >= 0, "STORE.ERR_AMOUNT_BELOW_ZERO");
+    (0, import_reliq10.require)(amount <= Number.MAX_SAFE_INTEGER, "STORE.ERR_AMOUNT_ABOVE_MAX_SAFE_INTEGER");
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) {
+        (0, import_reliq10.require)(product.price - amount >= 0, "STORE.ERR_PRICE_BELOW_ZERO");
+        product.price -= amount;
+      }
+      i++;
+    }
+    await _db.set(app);
+    return;
+  }
+  async function listProduct(product) {
+    let app = await _db.get();
+    app.products.push(product);
+    await _db.set(app);
+    return;
+  }
+  async function delistProduct(args) {
+    let name;
+    if (typeof args === "string") name = args;
+    else name = args.name;
+    let app = await _db.get();
+    let i = 0n;
+    while (i < app.products.length) {
+      let product = app.products[Number(i)];
+      if (product.name === name) app.products.splice(Number(i), 1);
+      i++;
+    }
+    return;
+  }
+}
+
+// src/server/payment/stripe/stripe_checkout_session_line_item.ts
+var import_stripe = require("stripe");
+function StripeCheckoutSessionLineItem(order) {
+  return {
+    quantity: Number(order.amount),
+    price_data: {
+      currency: "gbp",
+      unit_amount: order.product.price,
+      product_data: {
+        name: order.product.name,
+        description: order.product.name
+      }
+    }
+  };
+}
+
+// src/server/payment/stripe/stripe_checkout_session.ts
+var import_stripe2 = require("stripe");
+
+// src/server/payment/stripe/stripe_payment_provider.ts
+var import_reliq11 = require("reliq");
+function StripePaymentProvider(_socket) {
+  {
+    return { receive };
+  }
+  async function receive(baseUrl, orders, onSuccess, onFailure) {
+    let session = await _socket.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [...orders.map((order) => {
+        return StripeCheckoutSessionLineItem(order);
+      }) || []],
+      mode: "payment",
+      success_url: baseUrl + "/",
+      cancel_url: baseUrl + "/"
+    });
+    let sessionUrl = session.url;
+    (0, import_reliq11.require)(sessionUrl !== null, "STRIPE_PAYMENT_PROVIDER.ERR_MISSING_SESSION_URL");
+    let sessionId = session.id;
+    let timer = setInterval(async () => {
+      let updatedSession = await _socket.checkout.sessions.retrieve(sessionId);
+      let isComplete = updatedSession.payment_status === "paid" || updatedSession.status === "complete";
+      let isExpired = updatedSession.status === "expired";
+      if (isExpired) {
+        clearInterval(timer);
+        onFailure(updatedSession);
+        return;
+      } else if (isComplete) {
+        clearInterval(timer);
+        onSuccess(updatedSession);
+        return;
+      }
+    }, _seconds(9));
+    setTimeout(async () => {
+      clearInterval(timer);
+      let updatedSession = await _socket.checkout.sessions.retrieve(sessionId);
+      onFailure(updatedSession);
+      return;
+    }, _seconds(3600));
+    return sessionUrl;
+  }
+  function _seconds(ms) {
+    return ms * 1e3;
+  }
+}
+
+// src/server/payment/stripe/stripe_socket_adaptor.ts
+var import_stripe3 = __toESM(require("stripe"), 1);
+var import_reliq12 = require("reliq");
+function StripeSocketAdaptor(_apiKey) {
+  {
+    (0, import_reliq12.require)(_apiKey.trim().length !== 0, "STRIPE_SOCKET_ADAPTOR.ERR_INVALID_API_KEY");
+    return new import_stripe3.default(_apiKey);
+  }
+}
+
+// src/server/router/checkout_router.ts
+var import_express = require("express");
+var import_zod6 = require("zod");
+function CheckoutRouter(_apiKey, _store) {
+  {
+    return (0, import_express.Router)().post("/checkout", async (rq, rs) => {
+      try {
+        let { orders } = rq.body;
+        if (orders.length === 0) {
+          let message = "NO_ORDERS";
+          rs.send({ message });
+          return;
+        }
+        orders.forEach((order) => {
+          order.product.price *= 100;
+          return;
+        });
+        let domain = rq.headers.host;
+        let baseUrl = `http://${domain}`;
+        let socket = StripeSocketAdaptor(_apiKey);
+        let paymentProvider = StripePaymentProvider(socket);
+        let url = await paymentProvider.receive(
+          baseUrl,
+          orders,
+          (session) => {
+            console.log("Purchase successful");
+            orders.forEach(async (order) => {
+              await _store.decreaseStock(order.product.name, BigInt(order.amount));
+              return;
+            });
+            return;
+          },
+          (session) => {
+            console.log("Purchase expired.");
+            return;
+          }
+        );
+        rs.send({ url });
+        return;
+      } catch (e) {
+        rs.send({ e });
+        return;
+      }
+    });
+  }
+}
+
+// src/server/router/react_router.ts
+var import_express2 = require("express");
+var import_reliq13 = require("reliq");
+function ReactRouter(route, htmlFilePath) {
+  {
+    (0, import_reliq13.require)(route.trim().length !== 0, "REACT_ROUTER.ERR_INVALID_ROUTE");
+    (0, import_reliq13.require)(route.startsWith("/"), "REACT_ROUTER.ERR_INVALID_ROUTE");
+    return (0, import_express2.Router)().get(route, (__, rs) => rs.sendFile(htmlFilePath));
+  }
+}
+
+// src/server/router/store_router.ts
+var import_express3 = require("express");
+var import_zod7 = require("zod");
+var import_reliq14 = require("reliq");
+function StoreRouter(_store) {
+  {
+    return (0, import_express3.Router)().get("/store/products", async (__, rs) => {
+      try {
+        rs.send({ products: await _store.products() });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).get("/store/products-by-name", async (rq, rs) => {
+      try {
+        let { name } = rq.body;
+        if (!(name !== null && name !== void 0 && typeof name === "string")) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        rs.send({ products: await _store.products(name) });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/set-stock", async (rq, rs) => {
+      try {
+        let payload = import_zod7.z.object({
+          password: import_zod7.z.string().refine((v) => _hasPermission(v)),
+          name: import_zod7.z.string(),
+          amount: import_zod7.z.number()
+        }).parse(rq.body);
+        let { name, amount } = payload;
+        await _store.setStock(name, BigInt(amount));
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/increase-stock", async (rq, rs) => {
+      try {
+        let payload = import_zod7.z.object({
+          password: import_zod7.z.string().refine((v) => _hasPermission(v)),
+          name: import_zod7.z.string(),
+          amount: import_zod7.z.number()
+        }).parse(rq.body);
+        let { name, amount } = payload;
+        await _store.increaseStock(name, BigInt(amount));
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/decrease-stock", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && name !== null && name !== void 0 && typeof name === "string" && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount))) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.decreaseStock(name, BigInt(amount));
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/set-price", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && name !== null && name !== void 0 && typeof name === "string" && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount))) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.setPrice(name, amount);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/increase-price", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && name !== null && name !== void 0 && typeof name === "string" && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount))) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.increasePrice(name, amount);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/decrease-price", async (rq, rs) => {
+      try {
+        let { password, name, amount } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && name !== null && name !== void 0 && typeof name === "string" && amount !== null && amount !== void 0 && typeof amount === "number" && amount >= 0 && amount <= Number.MAX_SAFE_INTEGER && Number.isSafeInteger(amount))) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.decreasePrice(name, amount);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/list-product", async (rq, rs) => {
+      try {
+        let { password, product } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && ProductDataSchema.safeParse(product).success)) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.listProduct(product);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/delist-product-by-name", async (rq, rs) => {
+      try {
+        let { password, name } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && name !== null && name !== void 0 && typeof name === "string")) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.delistProduct(name);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    }).post("/store/delist-product-by-product", async (rq, rs) => {
+      try {
+        let { password, product } = rq.body;
+        if (!(password !== null && password !== void 0 && typeof password === "string" && _hasPermission(password) && ProductDataSchema.safeParse(product).success)) {
+          rs.send({ message: "STORE_ROUTER.ERR_INVALID_REQUEST" });
+          return;
+        }
+        await _store.delistProduct(product);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.error(e);
+        rs.send({ e });
+        return;
+      }
+    });
+  }
+  function _hasPermission(password) {
+    let correctPassword = process.env?.["ADMIN_PASSWORD"];
+    if (correctPassword === void 0) return false;
+    if (correctPassword.trim().length === 0) return false;
+    if (correctPassword === password) return true;
+    return false;
+  }
+}
+
+// src/server/router/user_router.ts
+var import_express4 = require("express");
+var import_bcrypt3 = require("bcrypt");
+var import_bcrypt4 = require("bcrypt");
+var import_reliq15 = require("reliq");
+function UserRouter(_database) {
+  {
+    return (0, import_express4.Router)().post("/sign_up", async (rq, rs) => {
+      try {
+        let { username, password } = rq.body;
+        let app = await _database.get();
+        console.log(app.users.length);
+        await _database.set({
+          ...app,
+          users: [...app.users || [], UserData({
+            username,
+            hash: (0, import_bcrypt3.hashSync)(password, 0),
+            orders: []
+          })]
+        });
+        let appAfter = await _database.get();
+        console.log(appAfter.users.length);
+        rs.send({ message: "OK" });
+        return;
+      } catch (e) {
+        console.log(e);
+        rs.send({ message: String(e) });
+        return;
+      }
+    }).post("/sign_in", async (rq, rs) => {
+      try {
+        let { username, password } = rq.body;
+        let app = await _database.get();
+        let matchingUsers = app.users.filter((user2) => {
+          return user2.username === username;
+        });
+        if (matchingUsers.length === 0) {
+          rs.send({ message: "ERR_INCORRECT_USERNAME_OR_PASSWORD" });
+          return;
+        }
+        let user = matchingUsers[0];
+        let isCorrectPassword = (0, import_bcrypt4.compareSync)(password, user.hash);
+        if (isCorrectPassword === false) {
+          rs.send({ message: "ERR_INCORRECT_USERNAME_OR_PASSWORD" });
+          return;
+        }
+        rs.send({ user });
+        return;
+      } catch (e) {
+        rs.send({ e });
+        return;
+      }
+    }).post("/users", async (rq, rs) => {
+      let { password } = rq.body;
+      let correctPassword = process.env?.["ADMIN_PASSWORD"] ?? null;
+      if (correctPassword === void 0) {
+        rs.send({ message: "ERR_INVALID_PASSWORD" });
+        return;
+      }
+      if (correctPassword !== password) {
+        rs.send({ message: "ERR_INVALID_PASSWORD" });
+        return;
+      }
+      let app = await _database.get();
+      let { users } = app;
+      rs.send({ users });
+      return;
+    });
+  }
+}
+
+// src/server/server.ts
+var import_express5 = __toESM(require("express"), 1);
+var import_reliq16 = require("reliq");
+var import_path = require("path");
+async function main() {
+  let redisPassword = process.env?.["REDIS_INT_KEY"] || null;
+  (0, import_reliq16.require)(redisPassword !== null, "MAIN.ERR_REDIS_PRIVATE_KEY_REQUIRED");
+  let redis = null;
+  try {
+    redis = await Redis(await RedisSocketAdaptor("redis-13928.c338.eu-west-2-1.ec2.redns.redis-cloud.com", redisPassword, 13928n), "*");
+  } catch (error) {
+    redis = null;
+    console.error("Unable to connect to Redis. The application will work but some features will be compromised.", error);
+  }
+  if (!redis) {
+    let socket2 = (0, import_express5.default)().use(import_express5.default.static((0, import_path.join)(__dirname, "web"))).use(import_express5.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).listen(3e3);
+    console.log("MAIN.SERVER_RUNNING_WITHOUT_CONNECTION", __dirname, 3e3);
+    return;
+  }
+  let store = Store(redis);
+  let checkoutApiKey = process.env?.["STRIPE_INT_TEST_KEY"] || null;
+  (0, import_reliq16.require)(checkoutApiKey !== null, "MAIN.ERR_STRIPE_PRIVATE_KEY_REQUIRED");
+  let socket = (0, import_express5.default)().use(import_express5.default.static((0, import_path.join)(__dirname, "web"))).use(import_express5.default.json()).use(ReactRouter("/", (0, import_path.join)(__dirname, "web/app.html"))).use(StoreRouter(store)).use(CheckoutRouter(checkoutApiKey, store)).use(UserRouter(redis)).listen(3e3);
+  console.log("MAIN.SERVER_RUNNING", __dirname, 3e3);
+  return;
+}
+main();

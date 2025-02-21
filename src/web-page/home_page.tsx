@@ -1,8 +1,11 @@
 import type { ReactNode } from "react";
-import type { ComponentPropsWithRef } from "react";
 import { ResponsiveAnchorPage } from "@web-component";
-import { CaptionAndContentCard } from "@web-component";
+import { Footer } from "@web-component";
 import { Theme } from "@web-constant";
+import { ImageSlider } from "@web-component";
+
+// @ts-ignore
+import PLACEHOLDER_PRODUCT from "../web/public/img/placeholder_product.jpg";
 
 export function HomePage(): ReactNode {
     return <>
@@ -14,28 +17,43 @@ export function HomePage(): ReactNode {
                     justifyContent: "center",
                     alignItems: "center",
                     width: "100%",
-                    height: "100%",
+                    height: "95%",
                     flex: 1
                 }}>
+                <ImageSlider
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        flex: 1,
+                        margin: 10,
+                    }}
+                    imageUrls={[
+                        PLACEHOLDER_PRODUCT,
+                        PLACEHOLDER_PRODUCT,
+                        PLACEHOLDER_PRODUCT,
+                        PLACEHOLDER_PRODUCT
+                    ]}>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "9em",
+                            fontWeight: "normal",
+                            fontFamily: Theme.FONT_0,
+                            color: Theme.DK_COLOR
+                        }}>
+                        <>OFFCUTS</>
+                    </div>
+                </ImageSlider>
                 <div
                     style={{
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
-                        fontSize: "9em",
-                        fontWeight: "normal",
-                        fontFamily: Theme.FONT_0,
-                        color: Theme.DK_COLOR
-                    }}>
-                    OFFCUTS
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        paddingTop: 16,
                         paddingBottom: 32
                     }}>
                     { 
@@ -68,12 +86,12 @@ export function HomePage(): ReactNode {
                     justifyContent: "center",
                     alignItems: "start",
                     width: "100%",
-                    height: "100%",
+                    height: "auto",
                     flex: 1
                 }}>
                 {
                     [{
-                        heading: "Why Offcuts?",
+                        heading: "Why Offcuts",
                         content: [
                             "Sustainable Solutions: Divert construction waste from landfills while supporting eco-friendly practices.",
                             "Affordable Materials: Access high-quality reclaimed materials at a fraction of the cost.",
@@ -100,7 +118,7 @@ export function HomePage(): ReactNode {
                                     width: "100%",
                                     height: "auto",
                                     flex: 1,
-                                    padding: 32
+                                    padding: 16
                                 }}>
                                 <div
                                     style={{
@@ -145,6 +163,7 @@ export function HomePage(): ReactNode {
                     })
                 }
             </div>
+            <Footer/>
         </ResponsiveAnchorPage>
     </>;
 }

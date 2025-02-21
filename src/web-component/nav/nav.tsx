@@ -45,6 +45,7 @@ export function Nav(props: NavProps): React.ReactNode {
                     paddingTop: 30,
                     paddingBottom: 30,
                     gap: 40,
+                    zIndex: 2000,
                     ... style
                 }}
                 { ... more }>
@@ -74,11 +75,6 @@ export function Nav(props: NavProps): React.ReactNode {
                         signInForm={
                             <NavSignInForm/>
                         }/>
-                    <Link
-                        to="/admin">
-                        <NavButton 
-                            icon={ adminIcon }/>
-                    </Link>
                 </NavButtonGroup>
             </div>
         </>;

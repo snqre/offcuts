@@ -84,6 +84,7 @@ export function NavSignInSignUpButton(props: NavSignInSignUpButtonProps): ReactN
                             justifyContent: "start",
                             alignItems: "center",
                             position: "absolute",
+                            right: "-100%",
                             top: "175%",
                             minWidth: "100%",
                             width: 400

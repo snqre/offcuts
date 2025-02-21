@@ -1,30 +1,31 @@
-import type { AxiosResponse } from "axios";
 import { default as Axios } from "axios";
-import { UserDataSchema } from "@common";
-import { UserData } from "@common";
 import { z as ZodValidator } from "zod";
-import { require } from "reliq";
-import { panic } from "reliq";
-import { toString } from "reliq";
+import {
+    UserDataSchema,
+    UserData
+} from "@common";
+import {
+    require,
+    panic,
+    toString
+} from "reliq";
 
 export type ClientUserDriver = {
     empty(): boolean;
     cache(): UserData | null;
     signIn(): Promise<UserData>;
     signIn(username: string, password: string): Promise<UserData>;
-    signUp(user: UserData): Promise<void>;
+    signUp(username: string, password: string): Promise<void>;
 };
 
 export function ClientUserDriver(): ClientUserDriver;
 export function ClientUserDriver(_cache: UserData | null): ClientUserDriver;
-export function ClientUserDriver(
-    _args0?: UserData | null
-): ClientUserDriver {
+export function ClientUserDriver(_p0?: UserData | null): ClientUserDriver {
     let _cache: UserData | null;
     let _password: string | null;
 
     /** @constructor */ {
-        _cache = _args0 ?? null;
+        _cache = _p0 ?? null;
         _password = null;
         return { empty, cache, signIn, signUp };
     }
@@ -40,41 +41,57 @@ export function ClientUserDriver(
     async function signIn(): Promise<UserData>;
     async function signIn(username: string, password: string): Promise<UserData>;
     async function signIn(
-        args0?: string,
-        args1?: string
+        p0?: string,
+        p1?: string
     ): Promise<UserData> {
         let username: string;
         let password: string;
-        if (args0 && args1) {
-            username = args0;
-            password = args1;
+        if (p0 && p1) {
+            username = p0;
+            password = p1;
+            let { e, message, user } = ZodValidator.object({
+                user: UserDataSchema.optional(),
+                message: ZodValidator.string().optional(),
+                e: ZodValidator.unknown().optional()
+            }).parse((await Axios.post("/sign_in", { username, password })).data);
+            if (user) {
+                _cache = user;
+                _password = password;
+                return user;
+            }
+            if (message) panic(message);
+            if (e) panic(toString(e));
+            panic("CLIENT_USER_DRIVER.ERR_INVALID_RESPONSE");
         }
-        else {
-            require(!empty(), "CLIENT_USER_DRIVER.SIGN_IN_DATA_NOT_PROVIDED_AND_CACHE_IS_UNFILLED");
-            username = cache()!.username;
-            password = _password!;
-        }
-        let { user, message, e } = ZodValidator.object({
+        require(!empty(), "CLIENT_USER_DRIVER.SIGN_IN_DATA_NOT_PROVIDED_AND_CACHE_IS_UNAVAILABLE");
+        username = cache()!.username;
+        password = _password!;
+        let { e, message, user } = ZodValidator.object({
             user: UserDataSchema.optional(),
             message: ZodValidator.string().optional(),
             e: ZodValidator.unknown().optional()
-        }).parse((await Axios.post("/sign-in", { username, password })).data);
+        }).parse((await Axios.post("/sign_in", { username, password })).data);
         if (user) {
             _cache = user;
             _password = password;
             return user;
         }
-        else if (message) panic(message);
-        else panic(toString(e));
+        if (message) panic(message);
+        if (e) panic(toString(e));
+        panic("CLIENT_USER_DRIVER.ERR_INVALID_RESPONSE");
     }
 
-    async function signUp(user: UserData): Promise<void> {
-        let { message, e } = ZodValidator.object({
+    async function signUp(username: string, password: string): Promise<void> {
+        let { e, message } = ZodValidator.object({
             message: ZodValidator.string().optional(),
             e: ZodValidator.unknown().optional()
-        }).parse((await Axios.post("/sign-up", { user })).data);
-        if (message) require(message === "OK", message);
-        else if (e) panic(toString(e));
-        _cache = user;
+        }).parse((await Axios.post("/sign_up", { username, password })).data);
+        if (e) panic(toString(e));
+        if (message) {
+            if (message !== "OK") panic(message);
+            return;
+        }
+        _cache = (await signIn(username, password));
+        return;
     }
 }
