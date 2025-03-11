@@ -118,7 +118,7 @@ export function HomePage(): ReactNode {
                                     width: "100%",
                                     height: "auto",
                                     flex: 1,
-                                    padding: 16
+                                    padding: 32
                                 }}>
                                 <div
                                     style={{
@@ -136,28 +136,37 @@ export function HomePage(): ReactNode {
                                     }}>
                                     { card.heading }
                                 </div>
-                                {
-                                    card.content.map(content => {
-                                        return <>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    color: Theme.DK_COLOR,
-                                                    fontSize: "0.75em",
-                                                    fontWeight: "normal",
-                                                    fontFamily: Theme.FONT_1,
-                                                    paddingTop: 8,
-                                                    paddingBottom: 8,
-                                                    textAlign: "left"
-                                                }}>
-                                                { content }
-                                            </div>
-                                        </>;
-                                    })
-                                }
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "start",
+                                        alignItems: "start",
+                                        width: "100%",
+                                    }}>
+                                    {
+                                        card.content.map(content => {
+                                            return <>
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        color: Theme.DK_COLOR,
+                                                        fontSize: "0.60em",
+                                                        fontWeight: "lighter",
+                                                        fontFamily: Theme.FONT_1,
+                                                        paddingTop: 8,
+                                                        paddingBottom: 8,
+                                                        textAlign: "left"
+                                                    }}>
+                                                    { content }
+                                                </div>
+                                            </>;
+                                        })
+                                    }
+                                </div>
                             </div>
                         </>;
                     })

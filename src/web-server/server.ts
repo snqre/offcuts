@@ -1,6 +1,8 @@
 import { default as Axios } from "axios";
 import { ProductDataSchema } from "@common";
 import { ProductData } from "@common";
+import { UserDataSchema } from "@common";
+import { UserData } from "@common";
 import { z as ZodValidator } from "zod";
 import { panic } from "reliq";
 
@@ -19,6 +21,7 @@ export type Server = {
     listProduct(password: string, product: ProductData): Promise<void>;
     delistProduct(password: string, name: string): Promise<void>;
     delistProduct(password: string, product: ProductData): Promise<void>;
+    users(password: string): Promise<Array<UserData>>;
 };
 
 export const Server: Server = (() => {
@@ -35,7 +38,8 @@ export const Server: Server = (() => {
             increasePrice,
             decreasePrice,
             listProduct,
-            delistProduct
+            delistProduct,
+            users
         };
     }
 
@@ -187,6 +191,13 @@ export const Server: Server = (() => {
         return;
     }
 
+    async function users(password: string): Promise<Array<UserData>> {
+        let { users } = (await Axios.post("/users", { password })).data;
+        if (Array.isArray(users) === false) {
+            return [];
+        }
+        return users;
+    }
     function _sort(products: Array<ProductData>, tags: Array<string>): Map<string, Array<ProductData> | undefined> {
         let map: Map<string, Array<ProductData>> = new Map();
         tags.forEach(tag => map.set(tag, []));

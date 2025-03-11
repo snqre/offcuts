@@ -36,7 +36,8 @@ export function SymbolButton(props: SymbolButtonProps): ReactNode {
                     fontWeight: "normal",
                     fontFamily: Theme.FONT_1,
                     boxShadow: Theme.SHADOW,
-                    ... style
+                    cursor: "pointer",
+                    ... style,
                 }}
                 { ... more }>
                 { children }

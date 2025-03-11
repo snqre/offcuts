@@ -66,13 +66,27 @@ export function BasketPage(): ReactNode {
                                                 }}>
                                                 <SymbolButton
                                                     onClick={
-                                                        () => Client.removeProductFromShoppingCart(order.product.name)
+                                                        () => {
+                                                            try {
+                                                                Client.removeProductFromShoppingCart(order.product.name);
+                                                                _updateCost();
+                                                                return;                                                            
+                                                            }
+                                                            catch {}
+                                                        }
                                                     }>
                                                     -
                                                 </SymbolButton>
                                                 <SymbolButton
                                                     onClick={
-                                                        () => Client.addProductToShoppingCart(order.product.name)
+                                                        () => {
+                                                            try {
+                                                                Client.addProductToShoppingCart(order.product.name);
+                                                                _updateCost();
+                                                                return;
+                                                            }
+                                                            catch {}
+                                                        }
                                                     }>
                                                     +
                                                 </SymbolButton>
