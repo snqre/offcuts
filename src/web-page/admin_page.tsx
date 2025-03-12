@@ -38,9 +38,6 @@ export function AdminPage(): ReactNode {
                                 args.shift();
                                 let command: string = args[0];
                                 let map: Record<string, AsyncFunction<void, string | Array<string> | null>> = {
-                                    "help": async () => {
-                                        return [];
-                                    },
                                     "tags": async () => {
                                         let trail: string = args[1];
                                         if (trail === "->") {
@@ -75,6 +72,21 @@ export function AdminPage(): ReactNode {
                                         (await Server.setStock(password, productName, productAmount));
                                         return "Ok";
                                     },
+                                    "list-product-without-image-url": async () => {
+                                        let password: string = args[1];
+                                        let productName: string = args[2];
+                                        let productPrice: number = Number(args[3]);
+                                        let productStock: number = Number(BigInt(args[4]));
+                                        let productTag: string = args[5];
+                                        let product: ProductData = ProductData({
+                                            name: productName,
+                                            price: productPrice,
+                                            stock: productStock,
+                                            tags: [productTag],
+                                        });
+                                        (await Server.listProduct(password, product));
+                                        return "Ok";
+                                    },
                                     "list-product": async () => {
                                         let password: string = args[1];
                                         let productName: string = args[2];
@@ -101,6 +113,7 @@ export function AdminPage(): ReactNode {
                                         }
                                         return result;  
                                     },
+
                                 };
                                 return (await map[command]());
                             }
