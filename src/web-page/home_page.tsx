@@ -6,10 +6,11 @@ import { ImageSlider } from "@web-component";
 
 // @ts-ignore
 import PLACEHOLDER_PRODUCT from "../web/public/img/placeholder_product.jpg";
+import type { State } from "@web-util";
 
-export function HomePage(): ReactNode {
+export function HomePage(props: HomePage.Props): ReactNode {
     return <>
-        <ResponsiveAnchorPage>
+        <ResponsiveAnchorPage tags={props.tags}>
             <div
                 style={{
                     display: "flex",
@@ -175,4 +176,10 @@ export function HomePage(): ReactNode {
             <Footer/>
         </ResponsiveAnchorPage>
     </>;
+}
+
+export namespace HomePage {
+    export type Props = {
+        tags: State<Array<string>>,
+    };
 }

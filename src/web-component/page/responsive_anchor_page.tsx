@@ -3,21 +3,9 @@ import type { ComponentPropsWithRef } from "react";
 import type { ReactNode } from "react";
 import { Nav } from "@web-component";
 import { useDevice } from "@web-hook";
+import type { State } from "@web-util";
 
-export type ResponsiveAnchorPageProps =
-    & ComponentPropsWithRef<"div">
-    & {};
 export function ResponsiveAnchorPage(props: ResponsiveAnchorPage.Props): ReactNode {
-    let { style, children, ... more } = props;
-    let device: Device = useDevice();
-
-    function size(): number {
-        if (device === "DEVICE.LAPTOP") return 1024;
-        if (device === "DEVICE.TABLET") return 768;
-        if (device === "DEVICE.MOBILE") return 320;
-        return 0;
-    }
-
     return <>
         <div
             style={{
@@ -28,9 +16,8 @@ export function ResponsiveAnchorPage(props: ResponsiveAnchorPage.Props): ReactNo
                 width: "100vw",
                 height: "100vh",
                 background: "white",
-                ...style
-            }}
-            { ...more }>
+                ...props.style
+            }}>
             <div
                 style={{
                     display: "flex",
@@ -45,7 +32,8 @@ export function ResponsiveAnchorPage(props: ResponsiveAnchorPage.Props): ReactNo
                     paddingLeft: 64,
                     paddingRight: 64
                 }}>
-                <Nav/>
+                <Nav
+                    tags={props.tags}/>
                 <div
                     style={{
                         display: "flex",
@@ -56,7 +44,7 @@ export function ResponsiveAnchorPage(props: ResponsiveAnchorPage.Props): ReactNo
                         width: "100%",
                         height: "100%"
                     }}>
-                    { children }
+                    {props.children}
                 </div>
             </div>
         </div>
@@ -65,5 +53,8 @@ export function ResponsiveAnchorPage(props: ResponsiveAnchorPage.Props): ReactNo
 
 export namespace ResponsiveAnchorPage {
     export type Props = 
-        & ComponentPropsWithRef<"div">;
+        & ComponentPropsWithRef<"div">
+        & {
+        tags: State<Array<string>>;
+    };
 }

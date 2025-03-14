@@ -8,8 +8,9 @@ import { Client } from "@web-client";
 import { Theme } from "@web-constant";
 import { useState } from "react";
 import { useEffect } from "react";
+import type { State } from "@web-util";
 
-export function BasketPage(): ReactNode {
+export function BasketPage(props: BasketPage.Props): ReactNode {
     let [cost, setCost] = useState<number>(0);
 
     useEffect(() => {
@@ -19,7 +20,8 @@ export function BasketPage(): ReactNode {
 
     /***/ {
         return <>
-            <ResponsiveAnchorPage>
+            <ResponsiveAnchorPage
+                tags={props.tags}>
                 <div
                     style={{
                         display: "flex",
@@ -136,4 +138,10 @@ export function BasketPage(): ReactNode {
         setCost(cost);
         return;
     }
+}
+
+export namespace BasketPage {
+    export type Props = {
+        tags: State<Array<string>>;
+    };
 }

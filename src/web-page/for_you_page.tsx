@@ -1,5 +1,4 @@
 import type { ComponentPropsWithRef, ReactNode } from "react";
-import type { ResponsiveAnchorPageProps } from "@web-component";
 import { ResponsiveAnchorPage } from "@web-component";
 import { Theme } from "@web-constant";
 import { config as Config } from "react-spring";
@@ -11,11 +10,9 @@ import { RevealOnDependencyMut } from "@web-component";
 
 // @ts-ignore
 import placeholderImage from "../web/public/img/placeholder_product.jpg";
+import type { State } from "@web-util";
 
-export type ForYouPageProps =
-    & Omit<ResponsiveAnchorPageProps, "children">;
-
-export function ForYouPage(props: ForYouPageProps): ReactNode {
+export function ForYouPage(props: ForYouPage.Props): ReactNode {
     let [imagePool, setImagePool] = useState<Array<`url(${ string })`>>([]);
     let [image0, setImage0] = useState<`url(${ string })`>(`url(${ placeholderImage })`);
     let [image1, setImage1] = useState<`url(${ string })`>(`url(${ placeholderImage })`);
@@ -48,7 +45,8 @@ export function ForYouPage(props: ForYouPageProps): ReactNode {
 
     /** @render */ {
         return <>
-            <ResponsiveAnchorPage>
+            <ResponsiveAnchorPage
+                tags={props.tags}>
                 <div
                     style={{
                         display: "flex",
@@ -183,33 +181,9 @@ export function ForYouPage(props: ForYouPageProps): ReactNode {
 }
 
 export namespace ForYouPage {
-    export function Reveal({ children, dependency }: { children: ReactNode; dependency: any }) {
-        let [spring, animateSpring] = useSpring(() => ({
-            opacity: 0,
-            config: Config.gentle
-        }));
-
-        useEffect(() => {
-            animateSpring.start({ opacity: 1 });
-            return;
-        }, [dependency]);
-
-        return <>
-            <animated.div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                    flex: 1,
-                    ...spring
-                }}>
-                { children }
-            </animated.div>
-        </>;
-    }
+    export type Props = {
+        tags: State<Array<string>>;
+    };
 }
 
 

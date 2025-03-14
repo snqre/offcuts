@@ -12,12 +12,13 @@ import { Server } from "@web-server";
 import { bigint, z as ZodValidator } from "zod";
 import { toString, type AsyncFunction } from "reliq";
 import { useState } from "react";
+import type { State } from "@web-util";
 
-export function AdminPage(): ReactNode {
+export function AdminPage(props: AdminPage.Props): ReactNode {
     let products = useState<Array<ProductData>>([]);
     
     return <>
-        <ResponsiveAnchorPage>
+        <ResponsiveAnchorPage tags={props.tags}>
             <div
                 style={{
                     display: "flex",
@@ -125,4 +126,10 @@ export function AdminPage(): ReactNode {
             </div>
         </ResponsiveAnchorPage>
     </>;
+}
+
+export namespace AdminPage {
+    export type Props = {
+        tags: State<Array<string>>;
+    };
 }

@@ -8,16 +8,19 @@ import {ProductData} from "@common";
 import {Theme} from "@web-constant";
 
 export type ProductPageProps = {
-    product: State<ProductData | null>;
+    selectedProduct: State<ProductData | null>;
+    tags: State<Array<string>>;
 };
 
-export function ProductPage({product}: ProductPageProps): ReactNode {
+export function ProductPage(props: ProductPageProps): ReactNode {
     return <>
-        <ResponsiveAnchorPage> {
-            product[0] === null ? <>
+        <ResponsiveAnchorPage
+            tags={props.tags}> {
+            props.selectedProduct[0] === null ? <>
                 <ProductPageContentWithNoProduct/>
             </> : <>
-                <ProductPageContent product={product}/>
+                <ProductPageContent 
+                    selectedProduct={props.selectedProduct}/>
             </>
         } 
         </ResponsiveAnchorPage>
@@ -46,10 +49,10 @@ export function ProductPageContentWithNoProduct(): ReactNode {
 
 
 export type ProductPageContentProps = {
-    product: State<ProductData | null>;
+    selectedProduct: State<ProductData | null>;
 };
 
-export function ProductPageContent({product}: ProductPageContentProps): ReactNode {
+export function ProductPageContent({selectedProduct: product}: ProductPageContentProps): ReactNode {
     return <>
         <div
             style={{

@@ -16,67 +16,60 @@ import { useEffect } from "react";
 
 // @ts-ignore
 import adminIcon from "../../web/public/icon/admin.png";
+import type { State } from "@web-util";
 
-export type NavProps = Omit<ComponentPropsWithRef<"div">, "children">;
+export function Nav(props: Nav.Props): React.ReactNode {
+    return <>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                height: "auto",
+                flex: 1,
+                paddingTop: 30,
+                paddingBottom: 30,
+                gap: 40,
+                zIndex: 2000,
+                ...props.style,
+            }}>
+            <NavLogo/>
+            <NavButtonGroup>
+                <NavCallToActionButton
+                    to="/for-you">
+                    For You
+                </NavCallToActionButton>
+                <NavTagsDropDownButton
+                    tags={props.tags[0]}>
+                    Materials
+                </NavTagsDropDownButton>
+            </NavButtonGroup>
+            <NavSearchBar/>
+            <NavButtonGroup>
+                <Link
+                    to="/basket">
+                    <NavButton>
+                        Basket
+                    </NavButton>
+                </Link>
+                <NavSignInSignUpButton
+                    signUpForm={<>
+                        <NavSignUpForm/>
+                    </>}
+                    signInForm={<>
+                        <NavSignInForm/>
+                    </>}/>
+            </NavButtonGroup>
+        </div>
+    </>;
+}
 
-export function Nav(props: NavProps): React.ReactNode {
-    let { style, ... more } = props;
-    let [tags, setTags] = useState<Array<string>>();
-
-    useEffect(() => {
-        (async () => {
-            setTags((await Server.tags()));
-            return;
-        })();
-        return;
-    }, []);
-
-    /** @constructor */ {
-        return <>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "auto",
-                    flex: 1,
-                    paddingTop: 30,
-                    paddingBottom: 30,
-                    gap: 40,
-                    zIndex: 2000,
-                    ... style
-                }}
-                { ... more }>
-                <NavLogo/>
-                <NavButtonGroup>
-                    <NavCallToActionButton
-                        to="/for-you">
-                        For You
-                    </NavCallToActionButton>
-                    <NavTagsDropDownButton
-                        tags={ tags ?? [] }>
-                        Materials
-                    </NavTagsDropDownButton>
-                </NavButtonGroup>
-                <NavSearchBar/>
-                <NavButtonGroup>
-                    <Link
-                        to="/basket">
-                        <NavButton>
-                            Basket
-                        </NavButton>
-                    </Link>
-                    <NavSignInSignUpButton
-                        signUpForm={
-                            <NavSignUpForm/>
-                        }
-                        signInForm={
-                            <NavSignInForm/>
-                        }/>
-                </NavButtonGroup>
-            </div>
-        </>;
-    }
+export namespace Nav {
+    export type Props = 
+        & ComponentPropsWithRef<"div">
+        & {
+        tags: State<Array<string>>;
+    };
 }
