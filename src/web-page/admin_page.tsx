@@ -38,6 +38,18 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                         if (commands.length === 0) return [];
                         let selector: string = commands[0];
                         let map: Record<string, Closure<[], Promise<Array<string>>>> = {
+                            "help": async () => [
+                                "tags",
+                                "products_with_tag|tag",
+                                "products",
+                                "set_price|password|product_key|product_price",
+                                "set_stock|password|product_key|product_stock",
+                                "list_product_without_image_url_and_description|password|product_key|product_name|product_price|product_stock|product_tag",
+                                "list_product_without_image_url|password|product_key|product_name|product_price|product_stock|product_tag|product_description",
+                                "list_product|password|product_key|product_name|product_price|product_stock|product_tag|product_image_url|product_description",
+                                "delist_product|password|product_key",
+                                "users|password",
+                            ],
                             "tags": async () => (await Server.tags()).map(tag => toString(tag)),
                             "products_with_tag": async () => {
                                 let tag: string = commands[1];
@@ -60,10 +72,10 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                                 (await Server.setStock(password, productKey, productStock));
                                 return [];
                             },
-                            "list_product_without_image_url": async () => {
+                            "list_product_without_image_url_and_description": async () => {
                                 let password: string = commands[1];
                                 let productKey: string = commands[2];
-                                let productName: string = commands[3]
+                                let productName: string = commands[3];
                                 let productPrice: number = Number(commands[4]);
                                 let productStock: number = Number(BigInt(commands[5]));
                                 let productTag: string = commands[6];
@@ -77,6 +89,25 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                                 (await Server.listProduct(password, product));
                                 return [];
                             },
+                            "list_product_without_image_url": async () => {
+                                let password: string = commands[1];
+                                let productKey: string = commands[2];
+                                let productName: string = commands[3]
+                                let productPrice: number = Number(commands[4]);
+                                let productStock: number = Number(BigInt(commands[5]));
+                                let productTag: string = commands[6];
+                                let productDescription: string = commands[7];
+                                let product: ProductData = ProductData({
+                                    key: productKey,
+                                    name: productName,
+                                    price: productPrice,
+                                    stock: productStock,
+                                    tags: [productTag],
+                                    description: productDescription,
+                                });
+                                (await Server.listProduct(password, product));
+                                return [];
+                            },
                             "list_product": async () => {
                                 let password: string = commands[1];
                                 let productKey: string = commands[2];
@@ -85,6 +116,7 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                                 let productStock: number = Number(BigInt(commands[5]));
                                 let productTag: string = commands[6];
                                 let productImageUrl: string = commands[7];
+                                let productDescription: string = commands[8];
                                 let product: ProductData = ProductData({
                                     key: productKey,
                                     name: productName,
@@ -92,8 +124,15 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                                     stock: productStock,
                                     tags: [productTag],
                                     imageUrl: productImageUrl,
+                                    description: productDescription,
                                 });
                                 (await Server.listProduct(password, product));
+                                return [];
+                            },
+                            "delist_product": async () => {
+                                let password: string = commands[1];
+                                let productKey: string = commands[2];
+                                (await Server.delistProduct(password, productKey));
                                 return [];
                             },
                             "users": async () => {

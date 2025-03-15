@@ -7,5 +7,5 @@ export const ProductDataSchema = ZodValidator.object({
     price: ZodValidator.number().min(0).finite(),
     stock: ZodValidator.number().min(0).finite().int(),
     tags: ZodValidator.array(ZodValidator.string().min(1)),
-    imageUrl: ZodValidator.string().min(1).optional()
+    imageUrl: ZodValidator.string().min(1).optional(),
 });
