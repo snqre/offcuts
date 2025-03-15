@@ -46,7 +46,8 @@ export function ShowRoomPage(props: ShowRoomPage.Props): ReactNode {
                 }}> {
                     products[0].map(product => <>
                         <ProductCard
-                            product={product}/>
+                            product={product}
+                            selectedProduct={props.selectedProduct}/>
                     </>)
                 }
             </div>
@@ -59,6 +60,7 @@ export namespace ShowRoomPage {
         & Omit<ResponsiveAnchorPage.Props, "children">
         & {
         selectedTag: State<string | null>;
+        selectedProduct: State<ProductData | null>;
         tags: State<Array<string>>;
     };
 }

@@ -53,7 +53,8 @@ function App(): ReactNode {
                     element={<>
                         <ShowRoomPage
                             tags={tags}
-                            selectedTag={selectedTag}/>
+                            selectedTag={selectedTag}
+                            selectedProduct={selectedProduct}/>
                     </>}/>
                 <Route
                     path="/product"

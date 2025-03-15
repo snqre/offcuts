@@ -1,3 +1,4 @@
+export * from "./terminal";
 export * from "./button/symbol_button";
 export * from "./cli/cli_input_line";
 export * from "./cli/cli_line";

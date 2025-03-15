@@ -37,6 +37,7 @@ var AdminDataSchema = import_zod.z.object({
 // src/common/product_data_schema.ts
 var import_zod2 = require("zod");
 var ProductDataSchema = import_zod2.z.object({
+  key: import_zod2.z.string().min(1),
   name: import_zod2.z.string().min(1).refine((x) => x.trim().length > 0),
   description: import_zod2.z.string().min(1).optional(),
   price: import_zod2.z.number().min(0).finite(),

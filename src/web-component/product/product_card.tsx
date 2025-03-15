@@ -11,11 +11,13 @@ import { useEffect } from "react";
 
 // @ts-ignore
 import placeholderImage from "../../web/public/img/placeholder_product.jpg";
+import type { State } from "@web-util";
 
 export type ProductCardProps = 
     & Omit<CardProps, "children"> 
     & {
     product: ProductData;
+    selectedProduct: State<ProductData | null>;
 };
 
 export function ProductCard(props: ProductCardProps): ReactNode {
@@ -48,9 +50,6 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                 { ... more }>
                 { /** Image */ }
                 <div
-                    onClick={
-                        async () => await Client.setProductFocus((product.name))
-                    }
                     style={{
                         display: "flex",
                         flexDirection: "row",
@@ -61,6 +60,7 @@ export function ProductCard(props: ProductCardProps): ReactNode {
                         flex: 4
                     }}>
                     <Link
+                        onClick={() => props.selectedProduct[1](props.product)}
                         style={{
                             display: "contents"
                         }}

@@ -1,16 +1,16 @@
 import type { ReactNode } from "react";
-import { ResponsiveAnchorPage } from "@web-component";
+import { ResponsiveAnchorPage, Terminal } from "@web-component";
 import { Table } from "@web-component";
 import { Theme } from "@web-constant";
 import { Form } from "@web-component";
 import { FormButton } from "@web-component";
 import { FormInput } from "@web-component";
 import { Cli } from "@web-component";
-import { ProductDataSchema } from "@common";
+import { ProductDataSchema, UserData } from "@common";
 import { ProductData } from "@common";
 import { Server } from "@web-server";
 import { bigint, z as ZodValidator } from "zod";
-import { toString, type AsyncFunction } from "reliq";
+import { toString, type AsyncFunction, type Closure } from "reliq";
 import { useState } from "react";
 import type { State } from "@web-util";
 
@@ -29,6 +29,99 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                     height: "100%",
                     flexGrow: 1
                 }}>
+                <Terminal
+                    style={{
+                        width: 600,
+                        height: 600,
+                    }}
+                    execute={async commands => {
+                        if (commands.length === 0) return [];
+                        let selector: string = commands[0];
+                        let map: Record<string, Closure<[], Promise<Array<string>>>> = {
+                            "tags": async () => (await Server.tags()).map(tag => toString(tag)),
+                            "products_with_tag": async () => {
+                                let tag: string = commands[1];
+                                let map: Map<string, Array<ProductData> | undefined> = (await Server.sortedProducts());
+                                let products: Array<ProductData> | undefined = map.get(tag);
+                                return products?.map(product => `${product.name}`) || [];
+                            },
+                            "products": async () => (await Server.products()).map(product => `${product.name}`),
+                            "set_price": async () => {
+                                let password: string = commands[1];
+                                let productKey: string = commands[2];
+                                let productPrice: number = Number(commands[3]);
+                                (await Server.setPrice(password, productKey, productPrice));
+                                return [];
+                            },
+                            "set_stock": async () => {
+                                let password: string = commands[1];
+                                let productKey: string = commands[2];
+                                let productStock: bigint = BigInt(Number(commands[3]));
+                                (await Server.setStock(password, productKey, productStock));
+                                return [];
+                            },
+                            "list_product_without_image_url": async () => {
+                                let password: string = commands[1];
+                                let productKey: string = commands[2];
+                                let productName: string = commands[3]
+                                let productPrice: number = Number(commands[4]);
+                                let productStock: number = Number(BigInt(commands[5]));
+                                let productTag: string = commands[6];
+                                let product: ProductData = ProductData({
+                                    key: productKey,
+                                    name: productName,
+                                    price: productPrice,
+                                    stock: productStock,
+                                    tags: [productTag],
+                                });
+                                (await Server.listProduct(password, product));
+                                return [];
+                            },
+                            "list_product": async () => {
+                                let password: string = commands[1];
+                                let productKey: string = commands[2];
+                                let productName: string = commands[3];
+                                let productPrice: number = Number(commands[4]);
+                                let productStock: number = Number(BigInt(commands[5]));
+                                let productTag: string = commands[6];
+                                let productImageUrl: string = commands[7];
+                                let product: ProductData = ProductData({
+                                    key: productKey,
+                                    name: productName,
+                                    price: productPrice,
+                                    stock: productStock,
+                                    tags: [productTag],
+                                    imageUrl: productImageUrl,
+                                });
+                                (await Server.listProduct(password, product));
+                                return [];
+                            },
+                            "users": async () => {
+                                let password: string = commands[1];
+                                return (await Server.users(password)).map(user => `${user.username}`); 
+                            },
+                        };
+                        try {
+                            return (await map[selector]());
+                        }
+                        catch (e) {
+                            return [toString(e)];
+                        }
+                    }}/>
+            </div>
+        </ResponsiveAnchorPage>
+    </>;
+}
+
+export namespace AdminPage {
+    export type Props = {
+        tags: State<Array<string>>;
+    };
+}
+
+/**
+ 
+
                 <Cli
                     style={{
                         width: 600
@@ -123,13 +216,5 @@ export function AdminPage(props: AdminPage.Props): ReactNode {
                             }
                         }
                     }/>
-            </div>
-        </ResponsiveAnchorPage>
-    </>;
-}
 
-export namespace AdminPage {
-    export type Props = {
-        tags: State<Array<string>>;
-    };
-}
+*/
